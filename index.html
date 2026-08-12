@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Veraidyn</title>
+<meta name="description" content="PLACEHOLDER — one sentence, agreed by both principals. See docs/github-setup-2026-08-11.md.">
+<meta name="robots" content="noindex">
+<!-- ^ REMOVE noindex when the copy is real and both principals have signed it off. -->
+<style>
+  :root {
+    --bg: #fbfbfa;
+    --fg: #16181d;
+    --muted: #5b6270;
+    --rule: #e3e4e8;
+    --accent: #1f6f5c;
+    --measure: 34rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #101216; --fg: #e9eaee; --muted: #9aa1ae;
+      --rule: #262a32; --accent: #6fbfa6;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #101216; --fg: #e9eaee; --muted: #9aa1ae;
+    --rule: #262a32; --accent: #6fbfa6;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 400 17px/1.65 ui-serif, Georgia, "Times New Roman", serif;
+    padding: clamp(2rem, 7vw, 6rem) clamp(1.25rem, 5vw, 2rem);
+    display: flex;
+    justify-content: center;
+  }
+  main { width: 100%; max-width: var(--measure); }
+
+  h1 {
+    font: 600 clamp(1.6rem, 4.5vw, 2.1rem)/1.2 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    letter-spacing: -0.015em;
+    margin: 0 0 0.4rem;
+  }
+  .tagline { color: var(--muted); margin: 0 0 2.5rem; }
+  h2 {
+    font: 600 0.78rem/1.4 ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 2.75rem 0 0.75rem;
+  }
+  p { margin: 0 0 1.15rem; }
+  a { color: var(--accent); text-underline-offset: 0.2em; }
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  hr { border: 0; border-top: 1px solid var(--rule); margin: 3rem 0 0; }
+  footer { color: var(--muted); font-size: 0.86rem; margin-top: 1.25rem; }
+
+  /* Placeholder marker — every instance must be gone before launch. */
+  .todo {
+    display: block;
+    border-left: 3px solid var(--accent);
+    padding: 0.65rem 0 0.65rem 0.9rem;
+    margin: 0 0 1.15rem;
+    color: var(--muted);
+    font: 400 0.9rem/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+</style>
+</head>
+<body>
+<main>
+
+  <h1>Veraidyn</h1>
+  <p class="tagline">
+    <span class="todo">PLACEHOLDER — one line. What Veraidyn does, in the words both principals agree on.</span>
+  </p>
+
+  <h2>What we do</h2>
+  <span class="todo">PLACEHOLDER — the offer. House rule, <code>CLAUDE.md</code>: never “certified”, “audited”, “attested”, “compliant” or “safe”. The product is independent evidence plus an explicit residual-risk statement.</span>
+
+  <h2>Independence</h2>
+  <span class="todo">PLACEHOLDER — the argument. Note from the 2026-08-10 research: independence is an eligibility condition, not a premium. ISO/IEC 42006:2025 §5.2.2.1 bars a certification body from consulting its own ISO 42001 clients, and §5.2.2.3 bars relabelling it — a certificate and an independent technical evaluation cannot lawfully be sold by the same party to the same client. Verify that clause against a purchased copy before publishing it.</span>
+
+  <h2>Contact</h2>
+  <span class="todo">PLACEHOLDER — a tenant address, not a personal one.</span>
+
+  <hr>
+  <footer>
+    Veraidyn PBC — a Delaware public benefit corporation.
+    <span class="todo">Confirm the exact registered name and whether “PBC” is in it before publishing. 8 Del. C. §362(c) requires notice to any person acquiring stock if the name does not carry “public benefit corporation”, “P.B.C.” or “PBC”.</span>
+  </footer>
+
+</main>
+</body>
+</html>
