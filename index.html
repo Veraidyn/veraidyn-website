@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Veraidyn · Trust for AI agents</title>
+  <meta name="description" content="Make your AI earn it. Quantified, enforced at runtime. Coming soon.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://veraidyn.com/">
+  <meta property="og:title" content="Veraidyn · Trust for AI agents">
+  <meta property="og:description" content="Make your AI earn it. Quantified, enforced at runtime. Coming soon.">
+  <meta property="og:image" content="https://veraidyn.com/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Veraidyn · Trust for AI agents">
+  <meta name="twitter:description" content="Make your AI earn it. Quantified, enforced at runtime. Coming soon.">
+  <meta name="twitter:image" content="https://veraidyn.com/og.png">
+
+  <link rel="icon" href="/favicon.png" type="image/png" sizes="48x48">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f6f9f9;
+      --card: #ffffff;
+      --tint: #e9f3f3;
+      --ink: #0d1e1f;
+      --ink-dim: #3f5658;
+      --ink-faint: #5f7577;
+      --line: #d8e6e6;
+      --vir: #009698;
+      --vir-deep: #00777a;
+      --vir-bright: #00b5b7;
+      --amber: #f0a63c;
+      --amber-text: #96610a;
+      --console-bg: #071416;
+      --console-line: #16292b;
+      --max: 68rem;
+      --sans: "Instrument Sans", system-ui, -apple-system, sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* dark canvas so overscroll at either end matches the dark hero and close */
+    html { scroll-behavior: smooth; background: #020c15; }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 1.0625rem;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+    }
+
+    ::selection { background: #bfe6e6; color: var(--ink); }
+
+    a { color: var(--vir-deep); text-decoration: none; }
+    a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    :focus-visible {
+      outline: 2px solid var(--vir-deep);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    .skip-link {
+      position: absolute;
+      left: -9999px; top: 0;
+      background: var(--vir-deep);
+      color: #fff;
+      padding: 0.6rem 1rem;
+      z-index: 50;
+      font-weight: 600;
+    }
+    .skip-link:focus { left: 1rem; top: 1rem; }
+
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ---------- Scroll reveal (hidden state only when JS is running) ---------- */
+    body.js .rv { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    body.js .rv:nth-child(2) { transition-delay: 0.08s; }
+    body.js .rv:nth-child(3) { transition-delay: 0.16s; }
+    body.js .rv:nth-child(4) { transition-delay: 0.24s; }
+    body.js .rv:nth-child(5) { transition-delay: 0.32s; }
+    body.js .rv:nth-child(6) { transition-delay: 0.4s; }
+    body.js .rv.from-l { transform: translateX(-40px); }
+    body.js .rv.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      body.js .rv { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* ---------- Nav ---------- */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(246, 249, 249, 0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line);
+      transition: background 0.3s ease, border-color 0.3s ease;
+    }
+    body.navjs .nav.over-hero {
+      background: transparent;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      border-bottom-color: transparent;
+    }
+    body.navjs .nav.over-hero .nav-links a { color: #cfe5e4; }
+    body.navjs .nav.over-hero .nav-links a:hover { color: #ffffff; }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.8rem 0;
+    }
+    .brand { display: flex; align-items: center; }
+    .brand:hover { text-decoration: none; }
+    .logo-tile {
+      background: rgb(2, 12, 21); /* exact background of the logo artwork */
+      border-radius: 8px;
+      padding: 0.4rem 0.7rem;
+      display: flex;
+      align-items: center;
+    }
+    .logo-img { display: block; height: 44px; width: auto; }
+    .wm-fallback {
+      display: none;
+      align-items: center;
+      gap: 0.45rem;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+    .wm-fallback .seg-teal { color: var(--vir-bright); }
+    .wm-fallback .seg-ai { color: var(--amber); }
+    .wm-fallback .div { width: 1px; height: 1.1em; background: #5f7674; opacity: 0.6; margin-left: -0.28em; }
+    .nav-links { display: none; align-items: center; gap: 2rem; }
+    @media (min-width: 880px) { .nav-links { display: flex; } }
+    .nav-links a { color: var(--ink-dim); font-size: 0.92rem; font-weight: 500; }
+    .nav-links a:hover { color: var(--ink); text-decoration: none; }
+    .btn {
+      display: inline-block;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #ffffff;
+      background: linear-gradient(120deg, var(--vir), var(--vir-deep));
+      padding: 0.7rem 1.4rem;
+      border-radius: 6px;
+      box-shadow: 0 6px 18px -8px rgba(0, 120, 122, 0.5);
+      transition: filter 0.15s ease, transform 0.15s ease;
+      white-space: nowrap;
+    }
+    .btn:hover { filter: brightness(1.08); text-decoration: none; transform: translateY(-1px); color: #fff; }
+    .btn-lg { font-size: 1.05rem; padding: 0.95rem 2rem; }
+
+    /* ---------- Hero: monumental wave title-card ---------- */
+    .hero {
+      position: relative;
+      margin-top: -73px;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      background: linear-gradient(165deg, #020c15 0%, #03181d 45%, #04252a 100%);
+    }
+    .ribbons { position: absolute; inset: -10% -20%; pointer-events: none; }
+    .ribbon { position: absolute; left: -10%; width: 120%; height: 100%; will-change: transform; }
+    .ribbon svg { width: 100%; height: 100%; overflow: visible; }
+    @media (prefers-reduced-motion: no-preference) {
+      .ribbon.r1 { animation: sway1 14s ease-in-out infinite alternate; }
+      .ribbon.r2 { animation: sway2 18s ease-in-out infinite alternate; }
+      .ribbon.r3 { animation: sway3 22s ease-in-out infinite alternate; }
+      @keyframes sway1 { from { transform: translate(-2.5%, 0) rotate(-1.2deg); } to { transform: translate(2.5%, 2%) rotate(1.2deg); } }
+      @keyframes sway2 { from { transform: translate(2%, 1%) rotate(0.8deg); } to { transform: translate(-2%, -1.5%) rotate(-0.8deg); } }
+      @keyframes sway3 { from { transform: translate(-1.5%, -1%) rotate(0.5deg); } to { transform: translate(1.5%, 1%) rotate(-0.5deg); } }
+      .shimmer { animation: shim 9s linear infinite; }
+      @keyframes shim { from { stroke-dashoffset: 1600; } to { stroke-dashoffset: 0; } }
+      .hero-logo { animation: logoIn 1.4s cubic-bezier(.2,.7,.3,1) both; }
+      @keyframes logoIn { from { opacity: 0; transform: translateY(18px) scale(0.97); } to { opacity: 1; transform: none; } }
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 56rem;
+      margin: 0 auto;
+      padding: 7rem 1.5rem 5rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .hero-content::before {
+      content: "";
+      position: absolute;
+      inset: -8% -14%;
+      background: radial-gradient(closest-side, rgba(2, 12, 21, 0.86) 40%, rgba(2, 12, 21, 0.45) 70%, transparent 100%);
+      z-index: -1;
+      pointer-events: none;
+    }
+    .hero-logo {
+      width: min(540px, 80vw);
+      height: auto;
+      filter: drop-shadow(0 20px 70px rgba(0, 181, 183, 0.35));
+    }
+    .hero h1 {
+      margin-top: 2.4rem;
+      color: #eef7f6;
+      font-weight: 700;
+      max-width: 17ch;
+      font-size: clamp(2.4rem, 5.6vw, 4.2rem);
+      line-height: 1.03;
+      letter-spacing: -0.03em;
+      text-shadow: 0 10px 60px rgba(2, 12, 21, 0.9);
+    }
+    .hero h1 .amber { color: var(--amber); }
+    .hero .subline {
+      margin: 1.7rem auto 0;
+      max-width: 48rem;
+      font-size: clamp(1.3rem, 3.2vw, 1.7rem);
+      line-height: 1.4;
+      color: #c3d9d7;
+      text-shadow: 0 4px 30px rgba(2, 12, 21, 0.95);
+    }
+    .hero .subline strong { color: #eef7f6; font-weight: 600; }
+    .hero-cta-row {
+      margin-top: 2.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.1rem;
+      flex-wrap: wrap;
+    }
+    .btn-main {
+      display: inline-block;
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: #021013;
+      text-decoration: none;
+      background: linear-gradient(120deg, var(--vir-bright), var(--vir));
+      padding: 1rem 2.1rem;
+      border-radius: 6px;
+      box-shadow: 0 0 46px -6px rgba(0, 181, 183, 0.6);
+      transition: filter 0.15s ease, transform 0.15s ease;
+    }
+    .btn-main:hover { filter: brightness(1.12); transform: translateY(-1px); text-decoration: none; color: #021013; }
+    .btn-xl { font-size: 1.12rem; padding: 1.1rem 2.5rem; }
+    .hero .btn-dark-ghost {
+      display: inline-block;
+      font-weight: 500;
+      font-size: 1.05rem;
+      color: #cfe5e4;
+      text-decoration: none;
+      border: 1px solid #1d4a4d;
+      padding: 1rem 2.1rem;
+      border-radius: 6px;
+      backdrop-filter: blur(4px);
+      transition: border-color 0.15s ease, color 0.15s ease;
+    }
+    .hero .btn-dark-ghost:hover { border-color: var(--vir); color: #ffffff; text-decoration: none; }
+    .hero-words {
+      position: absolute;
+      z-index: 1;
+      right: 2rem;
+      bottom: 1.8rem;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #5e8683;
+    }
+    .hero-words b { color: #8fd8d6; font-weight: 500; }
+
+    /* ---------- Sections ---------- */
+    section { padding: 6.5rem 0; position: relative; }
+    .kicker {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--vir-deep);
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .kicker::before { content: ""; width: 2rem; height: 1px; background: var(--vir); }
+    h2 {
+      font-weight: 700;
+      font-size: clamp(1.9rem, 5vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      max-width: 22ch;
+    }
+    .section-body {
+      margin-top: 1.5rem;
+      max-width: 40rem;
+      color: var(--ink-dim);
+      font-size: 1.14rem;
+    }
+    .section-body strong { color: var(--ink); font-weight: 600; }
+    /* The category claim. This is the sharpest sentence on the page and it
+       used to be buried mid-paragraph, so it gets its own weight.
+       The two sentences are broken by hand, so no max-width: a ch cap would
+       re-wrap them and undo the break. */
+    .pull-l { display: block; }
+    .pull {
+      margin-top: 2.6rem;
+      max-width: none;
+      font-size: clamp(1.45rem, 3.6vw, 2.1rem);
+      font-weight: 700;
+      line-height: 1.24;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      border-left: 3px solid var(--vir);
+      padding-left: 1.5rem;
+    }
+    .pull .accent { color: var(--vir-deep); }
+
+    .h2-wide { max-width: none; font-size: clamp(1.7rem, 4.1vw, 2.55rem); }
+    h2 .lit { color: var(--vir-deep); }
+
+    /* ---------- The challenge: flip cards ---------- */
+    .gpanels { margin-top: 2.9rem; display: grid; gap: 1.2rem; }
+    @media (min-width: 900px) { .gpanels { grid-template-columns: 1fr 1fr 1fr; } }
+    .gpanel { position: relative; }
+    body.flipjs .gpanel { height: 392px; perspective: 1100px; cursor: pointer; }
+    .g-inner { position: relative; width: 100%; height: 100%; }
+    body.flipjs .g-inner { transform-style: preserve-3d; transition: transform 0.55s cubic-bezier(0.3, 0.7, 0.3, 1); }
+    @media (prefers-reduced-motion: reduce) { body.flipjs .g-inner { transition: none; } }
+    body.flipjs .gpanel.flipped .g-inner { transform: rotateY(180deg); }
+    .g-face {
+      background: var(--console-bg);
+      border: 1px solid var(--console-line);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px -28px rgba(7, 20, 22, 0.5);
+      display: flex;
+      flex-direction: column;
+    }
+    body.flipjs .g-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+    .g-back { margin-top: 1rem; }
+    body.flipjs .g-back { margin-top: 0; transform: rotateY(180deg); }
+    .g-front .g-body { border-bottom: 1px solid var(--console-line); padding-right: 3.2rem; }
+    .g-front .art {
+      flex: 1;
+      min-height: 150px;
+      padding: 1rem 1.2rem;
+      background: linear-gradient(170deg, #0a1c1f, #071416);
+    }
+    .art svg { width: 100%; height: 100%; overflow: visible; }
+    .g-body { padding: 1.1rem 1.4rem 1.3rem; }
+    .g-back .g-body { padding: 1.3rem 1.5rem; }
+    .b-num {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      color: var(--vir-bright);
+      text-transform: uppercase;
+    }
+    .gpanel h3 { margin-top: 0.4rem; font-size: 1.2rem; font-weight: 600; color: #e8f4f3; letter-spacing: -0.01em; }
+    .g-back h3 { font-size: 1.02rem; }
+    .g-text { margin-top: 0.6rem; color: #9db4b2; font-size: 0.92rem; line-height: 1.6; }
+    .facts { margin-top: 0.7rem; display: flex; flex-direction: column; gap: 0.45rem; }
+    .fact {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.9rem;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      line-height: 1.45;
+      color: #b9cecc;
+    }
+    .fact b { color: var(--amber); font-weight: 500; white-space: nowrap; }
+    .src { margin-top: 0.7rem; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.04em; color: #48706e; }
+    .flip-hint {
+      position: absolute;
+      top: 0.8rem; right: 0.9rem;
+      z-index: 2;
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      border: 1px solid #22484b;
+      background: rgba(0, 150, 152, 0.1);
+      color: var(--vir-bright);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      line-height: 1;
+      pointer-events: none;
+    }
+    body.flipjs .flip-hint { display: flex; }
+    @media (prefers-reduced-motion: no-preference) {
+      .flip-hint { animation: hintspin 4.5s ease-in-out infinite; }
+      @keyframes hintspin {
+        0%, 62% { transform: rotate(0); }
+        78% { transform: rotate(180deg); }
+        100% { transform: rotate(360deg); }
+      }
+      body.js .gpanel.in .g-inner { animation: peek 0.8s ease 0.9s 1; }
+      body.js .gpanels .gpanel:nth-child(2).in .g-inner { animation-delay: 1.15s; }
+      body.js .gpanels .gpanel:nth-child(3).in .g-inner { animation-delay: 1.4s; }
+      @keyframes peek { 0%, 100% { transform: rotateY(0); } 45% { transform: rotateY(-22deg); } }
+    }
+
+    /* card-art loops (motion-gated; static-complete otherwise) */
+    @media (prefers-reduced-motion: no-preference) {
+      .art .a-item { animation: rowcycle 7.5s linear infinite backwards; }
+      .art .a-item.d2 { animation-delay: 0.6s; }
+      .art .a-item.d3 { animation-delay: 1.2s; }
+      .art .a-item.d4 { animation-delay: 1.8s; }
+      .art .a-item.d5 { animation-delay: 2.4s; }
+      @keyframes rowcycle {
+        0% { opacity: 0; }
+        5% { opacity: 1; }
+        82% { opacity: 1; }
+        90%, 100% { opacity: 0; }
+      }
+      .art .a-draw {
+        stroke-dasharray: 1;
+        animation: drawcycle 7.5s ease-in-out infinite backwards;
+        animation-delay: 0.4s;
+      }
+      @keyframes drawcycle {
+        0% { stroke-dashoffset: 1; opacity: 1; }
+        24% { stroke-dashoffset: 0; opacity: 1; }
+        82% { stroke-dashoffset: 0; opacity: 1; }
+        90%, 100% { stroke-dashoffset: 0; opacity: 0; }
+      }
+      .a-pulse { animation: apulse 2.6s ease-in-out infinite; }
+      @keyframes apulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+      .qblink { animation: qblink 2.4s ease-in-out infinite; }
+      @keyframes qblink { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+      /* coverage gauge: fills identity->access->transport, drains in reverse */
+      .fillbar { transform-origin: left center; transform-box: fill-box; }
+      .fillbar.fa { animation: fillA 8s ease-in-out infinite; }
+      .fillbar.fb { animation: fillB 8s ease-in-out infinite; }
+      .fillbar.fc { animation: fillC 8s ease-in-out infinite; }
+      @keyframes fillA {
+        0%, 2% { transform: scaleX(0); }
+        10% { transform: scaleX(1); }
+        86% { transform: scaleX(1); }
+        94%, 100% { transform: scaleX(0); }
+      }
+      @keyframes fillB {
+        0%, 10% { transform: scaleX(0); }
+        18% { transform: scaleX(1); }
+        78% { transform: scaleX(1); }
+        86%, 100% { transform: scaleX(0); }
+      }
+      @keyframes fillC {
+        0%, 18% { transform: scaleX(0); }
+        26% { transform: scaleX(1); }
+        70% { transform: scaleX(1); }
+        78%, 100% { transform: scaleX(0); }
+      }
+    }
+
+    /* ---------- The approach: the three pillars ----------
+       One dark instrument with three readouts, not three cards. The nodes
+       deliberately reuse the CTA trust map's tile and state language so the
+       two sections read as one product rather than two visualisations. */
+    .approach { background: var(--tint); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    /* The heading holds one line above 900px. The global h2 caps at 22ch,
+       which is shorter than this sentence, so the cap has to go.
+       Re-measure the rendered width before raising the size. */
+    .approach h2 { max-width: none; font-size: clamp(1.7rem, 4.7vw, 3.5rem); }
+    @media (min-width: 900px) { .approach h2 { white-space: nowrap; } }
+    /* Three separate panels with real gaps, not one slab with hairlines.
+       Each pillar needs its own frame or they read as a wall. */
+    .cards3 { margin-top: 3.2rem; display: grid; gap: 1.6rem; }
+    .cardp {
+      background: var(--console-bg);
+      border: 1px solid var(--console-line);
+      border-radius: 16px;
+      padding: 1.7rem 1.6rem 1.5rem;
+      box-shadow: 0 26px 60px -34px rgba(7, 20, 22, 0.5);
+      /* grid items default to min-width:auto, which lets the wide figure
+         push the card past its track and overflow the document */
+      min-width: 0;
+    }
+    .band-n { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.2em; color: var(--vir-bright); }
+    .band-t {
+      margin-top: 0.5rem;
+      font-weight: 700;
+      font-size: clamp(1.3rem, 2.9vw, 1.85rem);
+      letter-spacing: -0.022em;
+      line-height: 1.18;
+      color: #e8f4f3;
+    }
+    /* no max-width: a ch/rem cap is far narrower than the card and forces the
+       last word onto its own line. These wrap naturally on narrow screens. */
+    .band-c { margin-top: 0.55rem; font-size: 1.02rem; line-height: 1.5; color: #8fadab; }
+    .band-fig { margin-top: 1.4rem; }
+    .band-fig svg { display: block; width: 100%; height: auto; overflow: visible; }
+    /* Narrow screens: these figures are ~6:1, so at 375px everything inside
+       shrinks past legibility. Hold a floor width and let the figure scroll
+       inside its own container rather than rendering it unreadable.
+       A proper portrait variant (as the CTA map has) is the real fix. */
+    @media (max-width: 720px) {
+      .band-fig { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 0.4rem; min-width: 0; }
+      .band-fig svg { min-width: 680px; }
+    }
+
+    .p-tile { fill: #0b2024; stroke-width: 2.2; transition: stroke 0.5s ease; }
+    .p-ic { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.5s ease; }
+    .p-lab { font-family: var(--sans); font-size: 15px; fill: #a3c2c0; }
+    .p-conn { stroke: #35646a; stroke-width: 2.2; fill: none; transition: stroke 0.5s ease, opacity 0.5s ease; }
+    .p-conn.dead { stroke-dasharray: 6 6; stroke: #33484a; }
+    .p-num { font-family: var(--mono); font-size: 17px; fill: #e8f4f3; }
+    .p-rel { font-family: var(--mono); font-size: 11.5px; letter-spacing: 1.3px; fill: #6f9391; }
+    .p-env { fill: rgba(0, 150, 152, 0.10); stroke: var(--vir); stroke-width: 1.6; stroke-dasharray: 7 6; }
+    .p-envlab { font-family: var(--mono); font-size: 12px; letter-spacing: 1.5px; fill: #5f8a88; }
+    .p-dot { fill: #22c55e; }
+    .p-dot.bad { fill: var(--amber); }
+    .p-seg { fill: #14282b; transition: fill 0.4s ease; }
+    .p-seg.on { fill: #22c55e; }
+    /* lost, not filled with something else: a faint scar where trust used to be */
+    .p-seg.lost { fill: #1a1410; stroke: #4a3a1e; stroke-width: 1; }
+    .p-iso { fill: none; stroke: #ef4444; stroke-width: 1.8; stroke-dasharray: 6 5; }
+    .p-isolab { font-family: var(--mono); font-size: 12px; letter-spacing: 1.3px; fill: #d98b8b; }
+    .p-route { fill: none; stroke: #3b82f6; stroke-width: 2.2; }
+    .p-routelab { font-family: var(--sans); font-size: 15px; fill: #9db4b2; }
+    .p-fade { opacity: 1; }
+    body.js .p-fade { opacity: 0; transition: opacity 0.55s ease; }
+    body.js .p-fade.on { opacity: 1; }
+
+    /* The moat, as a spec plate. What we model, how we compute it, where it
+       runs. Each of these was a clause in a paragraph nobody was going to read. */
+    .spec {
+      margin-top: 3.6rem;
+      display: grid;
+      gap: 1.7rem 2.4rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 760px) { .spec { grid-template-columns: repeat(3, 1fr); } }
+    .spec-item { border-top: 2px solid var(--vir); padding-top: 1rem; }
+    .spec-k {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--vir-deep);
+    }
+    .spec-v {
+      margin-top: 0.45rem;
+      font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+      font-weight: 600;
+      line-height: 1.25;
+      letter-spacing: -0.015em;
+      color: var(--ink);
+    }
+
+    /* ---------- CTA: the close (bookends the dark hero) ---------- */
+    .cta {
+      text-align: center;
+      overflow: hidden;
+      background: linear-gradient(195deg, #04252a 0%, #03181d 52%, #020c15 100%);
+      border-top: 1px solid #0d2b2e;
+      padding: 4.5rem 0 7rem;
+    }
+    .cta .cta-glow {
+      position: absolute;
+      width: min(880px, 150vw);
+      aspect-ratio: 1;
+      left: 50%; top: 0;
+      transform: translate(-50%, -32%);
+      background: radial-gradient(closest-side, rgba(0, 181, 183, 0.15), transparent 70%);
+      pointer-events: none;
+    }
+    .cta .kicker { justify-content: center; color: var(--vir-bright); }
+    .cta .kicker::before, .cta .kicker::after { content: ""; width: 2rem; height: 1px; background: var(--vir); }
+    .cta h2 { margin: 0 auto; color: #eef7f6; max-width: 18ch; font-size: clamp(2.1rem, 5.4vw, 3.2rem); }
+    /* the stakes line opens the close; the graphic answers it.
+       The setup holds one line above 900px, so it is sized to fit rather
+       than to shout. "Until now." carries the weight underneath. */
+    /* The stakes stack above the map. The verdict, "Until now.", waits
+       until after it, so the map gets to answer before the line lands. */
+    .cta .cta-stakes { max-width: none; margin-bottom: 3.4rem; font-size: inherit; }
+    .cta .ct-line {
+      display: block;
+      font-size: clamp(1.7rem, 4.4vw, 3rem);
+      line-height: 1.14;
+      color: #b9d3d1;
+    }
+    .cta .ct-line-2 { color: #eef7f6; }
+    @media (min-width: 900px) { .cta .ct-line { white-space: nowrap; } }
+    .cta .ct-pivot {
+      margin: 6.2rem auto 0;
+      color: var(--vir-bright);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.05;
+      font-size: clamp(2.4rem, 5.8vw, 3.7rem);
+    }
+    .cta .kicker { margin-top: 6.6rem; }
+    .cta .lit { color: var(--vir-bright); }
+    .cta .cta-sub {
+      font-weight: 700;
+      font-size: clamp(1.55rem, 3.4vw, 2.15rem);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      color: #eef7f6;
+    }
+    .cta .section-body { margin-left: auto; margin-right: auto; color: #c3d9d7; }
+    .cta .btn-xl { margin-top: 2.5rem; }
+    .cta .cta-alt { margin-top: 1.4rem; font-size: 0.95rem; color: #9db4b2; }
+    .cta .cta-alt a { color: var(--vir-bright); }
+
+    /* ---------- The trust map: the estate as the product sees it ----------
+       Nodes, edges and both layouts are generated in the page script, because
+       the wide and narrow arrangements share one node list and one edge list.
+       Hand-authoring them would mean two copies of the same map. */
+    .tmap { position: relative; margin: 0 auto; }
+    .tmap svg { display: block; width: 100%; height: auto; overflow: visible; }
+    .tm-tile { fill: #0b2024; stroke-width: 2; transition: stroke 0.5s ease; }
+    .tm-icon { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.5s ease; }
+    .tm-label { font-family: var(--sans); fill: #a3c2c0; }
+    .tm-edge {
+      stroke: #35646a;
+      stroke-width: 1.6;
+      fill: none;
+      transition: stroke 0.5s ease, stroke-width 0.5s ease, opacity 0.5s ease;
+    }
+    /* a relationship carrying a state earns more presence than a quiet one */
+    .tm-edge.stated { stroke-width: 2.2; }
+    .tm-node { transition: opacity 0.4s ease; }
+
+    .tm-legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.4rem 1.15rem;
+      margin-bottom: 1.4rem;
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      color: #7fa9a7;
+    }
+    .tm-legend i {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      margin-right: 0.42rem;
+      vertical-align: 1px;
+    }
+    /* staged reveal: systems appear, then the relationships between them draw in */
+    body.js .tmap .tm-legend { opacity: 0; transition: opacity 0.6s ease; }
+    body.js .tmap.go .tm-legend { opacity: 1; }
+
+    /* ---------- Footer ---------- */
+    footer { border-top: 1px solid #0f2529; background: #020c15; padding: 2.6rem 0 3.2rem; font-size: 0.88rem; color: #7d9d9b; }
+    .footer-inner { display: flex; flex-direction: column; gap: 0.6rem; }
+    @media (min-width: 760px) { .footer-inner { flex-direction: row; justify-content: space-between; align-items: baseline; } }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <nav class="nav" aria-label="Main">
+    <div class="wrap nav-inner">
+      <a class="brand" href="/" aria-label="Veraidyn home">
+        <span class="logo-tile">
+          <img class="logo-img" src="/logo-nav.png" alt="Veraidyn"
+               onerror="this.style.display='none'; document.getElementById('wm-fallback').style.display='flex';">
+          <span class="wm-fallback" id="wm-fallback" aria-hidden="true">
+            <span class="seg-teal">VER</span><span class="div"></span><span class="seg-ai">AI</span><span class="div"></span><span class="seg-teal">DYN</span>
+          </span>
+        </span>
+      </a>
+      <div class="nav-links">
+        <a href="#why-trust">Why trust</a>
+        <a href="#approach">The approach</a>
+      </div>
+      <a class="btn" href="mailto:contact@veraidyn.com?subject=Veraidyn%20early%20access">Early access</a>
+    </div>
+  </nav>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="ribbons" aria-hidden="true">
+        <div class="ribbon r3">
+          <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="gb3" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#0b3d40"/><stop offset="1" stop-color="#06282b"/>
+              </linearGradient>
+            </defs>
+            <path d="M-100 640 C 300 380, 620 820, 950 560 C 1220 350, 1450 460, 1750 260"
+                  stroke="url(#gb3)" stroke-width="150" fill="none" stroke-linecap="round" opacity="0.55"/>
+          </svg>
+        </div>
+        <div class="ribbon r2">
+          <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="gb2" x1="0" y1="0" x2="1600" y2="900" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#00777a"/><stop offset="0.6" stop-color="#009698"/><stop offset="1" stop-color="#075e60"/>
+              </linearGradient>
+            </defs>
+            <path d="M-100 560 C 340 320, 640 760, 980 500 C 1250 300, 1470 420, 1750 200"
+                  stroke="url(#gb2)" stroke-width="86" fill="none" stroke-linecap="round" opacity="0.8"/>
+            <path d="M-100 560 C 340 320, 640 760, 980 500 C 1250 300, 1470 420, 1750 200"
+                  class="shimmer" stroke="#7ce7e8" stroke-width="3" fill="none"
+                  stroke-dasharray="70 1530" opacity="0.8"/>
+          </svg>
+        </div>
+        <div class="ribbon r1">
+          <svg viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="gb1" x1="0" y1="200" x2="1600" y2="700" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stop-color="#00b5b7"/><stop offset="0.5" stop-color="#009698"/><stop offset="1" stop-color="#00b5b7"/>
+              </linearGradient>
+              <filter id="glow1" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="26" result="b"/>
+                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <path d="M-100 500 C 360 260, 660 700, 1000 440 C 1270 240, 1480 380, 1750 140"
+                  stroke="url(#gb1)" stroke-width="30" fill="none" stroke-linecap="round"
+                  filter="url(#glow1)" opacity="0.95"/>
+            <path d="M-100 470 C 360 230, 660 670, 1000 410 C 1270 210, 1480 350, 1750 110"
+                  stroke="#0d4b4e" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.7"/>
+            <path d="M-100 530 C 360 290, 660 730, 1000 470 C 1270 270, 1480 410, 1750 170"
+                  stroke="#0d4b4e" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.5"/>
+            <path d="M-100 500 C 360 260, 660 700, 1000 440 C 1270 240, 1480 380, 1750 140"
+                  class="shimmer" stroke="#ffffff" stroke-width="4" fill="none"
+                  stroke-dasharray="110 1490" opacity="0.55"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="hero-content">
+        <img class="hero-logo" src="/logo-hero.png" alt="Veraidyn">
+        <h1 id="hero-heading"><span class="amber">Trust for AI agents.</span></h1>
+        <p class="subline"><strong>Make your AI earn it.</strong> Quantified, enforced at runtime.</p>
+        <div class="hero-cta-row">
+          <a class="btn-main" href="mailto:contact@veraidyn.com?subject=Veraidyn%20early%20access">Request early access</a>
+          <a class="btn-dark-ghost" href="#why-trust">Why trust</a>
+        </div>
+      </div>
+      <p class="hero-words" aria-hidden="true"><b>Builds</b> · Vouches · Flows · <b>Repairs</b></p>
+    </section>
+
+    <!-- Tension: the gap -->
+    <section id="why-trust" aria-labelledby="problem-heading">
+      <div class="wrap">
+        <p class="kicker rv">The challenge</p>
+        <h2 id="problem-heading" class="rv h2-wide">The security controls you're relying on aren't wrong. <span class="lit">They're outmatched.</span></h2>
+
+        <div class="gpanels">
+          <div class="gpanel rv" aria-label="Challenge 1: built for the pre-AI era. Activate to read more.">
+            <div class="g-inner">
+              <div class="g-face g-front">
+                <span class="flip-hint" aria-hidden="true">&#10226;</span>
+                <div class="g-body">
+                  <p class="b-num">Challenge 01</p>
+                  <h3>Built for the pre-AI era</h3>
+                </div>
+                <div class="art" role="img" aria-label="A rigid rule table: allow and deny entries, the shape of pre-AI security controls.">
+                  <svg viewBox="0 0 300 150" aria-hidden="true" font-family="'JetBrains Mono', monospace" font-size="11.5">
+                    <g class="a-item">
+                      <text x="8" y="22" fill="#7e9a98">ALLOW</text><text x="62" y="22" fill="#5f7674">tcp/443 egress</text>
+                      <rect x="238" y="10" width="54" height="17" rx="3" fill="none" stroke="#22383b"/><text x="247" y="22" fill="#48706e" font-size="9.5">static</text>
+                    </g>
+                    <g class="a-item d2">
+                      <text x="8" y="48" fill="#7e9a98">DENY</text><text x="62" y="48" fill="#5f7674">udp/*</text>
+                      <rect x="238" y="36" width="54" height="17" rx="3" fill="none" stroke="#22383b"/><text x="247" y="48" fill="#48706e" font-size="9.5">static</text>
+                    </g>
+                    <g class="a-item d3">
+                      <text x="8" y="74" fill="#7e9a98">ALLOW</text><text x="62" y="74" fill="#5f7674">tools: search,mail</text>
+                      <rect x="238" y="62" width="54" height="17" rx="3" fill="none" stroke="#22383b"/><text x="247" y="74" fill="#48706e" font-size="9.5">static</text>
+                    </g>
+                    <g class="a-item d4">
+                      <text x="8" y="100" fill="#7e9a98">DENY</text><text x="62" y="100" fill="#5f7674">path: /prod/*</text>
+                      <rect x="238" y="88" width="54" height="17" rx="3" fill="none" stroke="#22383b"/><text x="247" y="100" fill="#48706e" font-size="9.5">static</text>
+                    </g>
+                    <g class="a-item d5">
+                      <text x="8" y="126" fill="#7e9a98">MATCH</text><text x="62" y="126" fill="#5f7674">injection_regex_v417</text>
+                      <rect x="238" y="114" width="54" height="17" rx="3" fill="none" stroke="#3a2f1c"/><text x="243" y="126" fill="#8a6a33" font-size="9.5">brittle</text>
+                    </g>
+                  </svg>
+                </div>
+              </div>
+              <div class="g-face g-back">
+                <span class="flip-hint" aria-hidden="true">&#10226;</span>
+                <div class="g-body">
+                  <p class="b-num">Challenge 01</p>
+                  <h3>Built for the pre-AI era</h3>
+                  <p class="g-text">Guardrails, access lists, port and protocol filters. All built for deterministic systems: valid account, allowed port, yes or no. Agents do human work, judgment included. Judgment never shows up in an access log.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="gpanel rv" aria-label="Challenge 2: violated time and again. Activate to read the record.">
+            <div class="g-inner">
+              <div class="g-face g-front">
+                <span class="flip-hint" aria-hidden="true">&#10226;</span>
+                <div class="g-body">
+                  <p class="b-num">Challenge 02</p>
+                  <h3>Violated time and again</h3>
+                </div>
+                <div class="art" role="img" aria-label="An enclosure with escape paths punching through its wall, one after another.">
+                  <svg viewBox="0 0 300 150" aria-hidden="true">
+                    <rect x="28" y="24" width="150" height="100" rx="8" fill="none" stroke="#3a4f52" stroke-width="2"/>
+                    <text x="40" y="44" fill="#48706e" font-family="'JetBrains Mono', monospace" font-size="9.5">ENCLOSURE</text>
+                    <circle cx="90" cy="82" r="7" fill="#009698"/>
+                    <path class="a-item d2" d="M96 78 C 140 60, 165 50, 178 46 C 220 34, 258 30, 288 32" stroke="#3a4f52" stroke-width="1.6" fill="none" opacity="0.5"/>
+                    <path class="a-item d3" d="M96 88 C 140 100, 168 106, 178 108 C 218 116, 256 118, 286 114" stroke="#3a4f52" stroke-width="1.6" fill="none" opacity="0.5"/>
+                    <path class="a-draw" pathLength="1" d="M96 82 C 135 80, 160 76, 178 72 C 222 62, 260 56, 290 54" stroke="#f0a63c" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    <g class="a-item d4" stroke="#f0a63c" stroke-width="1.4">
+                      <line x1="172" y1="60" x2="184" y2="52"/>
+                      <line x1="171" y1="80" x2="185" y2="84"/>
+                      <line x1="174" y1="68" x2="188" y2="66"/>
+                    </g>
+                    <circle class="a-item d5" cx="290" cy="54" r="5" fill="#f0a63c"/>
+                  </svg>
+                </div>
+              </div>
+              <div class="g-face g-back">
+                <span class="flip-hint" aria-hidden="true">&#10226;</span>
+                <div class="g-body">
+                  <p class="b-num">Challenge 02</p>
+                  <h3>Violated time and again</h3>
+                  <p class="g-text">Not a hypothetical. The public record:</p>
+                  <div class="facts">
+                    <p class="fact"><span>Live production database deleted during a code freeze</span><b>2025</b></p>
+                    <p class="fact"><span>Espionage campaign executed 80 to 90% by AI agents</span><b>~30 orgs</b></p>
+                    <p class="fact"><span>Added breach cost when shadow AI is involved</span><b>+$670K</b></p>
+                    <p class="fact"><span>Breached orgs with shadow AI incidents, doubled in a year</span><b>43%</b></p>
+                  </div>
+                  <p class="src">IBM Cost of a Data Breach 2026 · public incident disclosures, 2025</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="gpanel rv" aria-label="Challenge 3: necessary, not sufficient. Activate to read more.">
+            <div class="g-inner">
+              <div class="g-face g-front">
+                <span class="flip-hint" aria-hidden="true">&#10226;</span>
+                <div class="g-body">
+                  <p class="b-num">Challenge 03</p>
+                  <h3>Necessary. Not sufficient.</h3>
+                </div>
+                <div class="art" role="img" aria-label="A coverage bar fills for identity, access, and transport, then stops at a dashed segment labeled judgment.">
+                  <svg viewBox="0 0 300 150" aria-hidden="true">
+                    <text x="30" y="30" fill="#48706e" font-family="'JetBrains Mono', monospace" font-size="9.5">WHAT THE STACK COVERS</text>
+                    <rect x="30" y="44" width="240" height="26" rx="5" fill="none" stroke="#22383b" stroke-width="1.5"/>
+                    <rect class="fillbar fa" x="33" y="47" width="52" height="20" rx="3" fill="#155e60"/>
+                    <rect class="fillbar fb" x="88" y="47" width="52" height="20" rx="3" fill="#187577"/>
+                    <rect class="fillbar fc" x="143" y="47" width="42" height="20" rx="3" fill="#1b8b8d"/>
+                    <rect class="a-pulse" x="190" y="47" width="77" height="20" rx="3" fill="rgba(0, 150, 152, 0.07)" stroke="#009698" stroke-width="1.4" stroke-dasharray="5 4"/>
+                    <text x="33" y="88" fill="#48706e" font-family="'JetBrains Mono', monospace" font-size="8.5">IDENTITY</text>
+                    <text x="92" y="88" fill="#48706e" font-family="'JetBrains Mono', monospace" font-size="8.5">ACCESS</text>
+                    <text x="145" y="88" fill="#48706e" font-family="'JetBrains Mono', monospace" font-size="8.5">TRANSPORT</text>
+                    <text class="qblink" x="203" y="88" fill="#00b5b7" font-family="'JetBrains Mono', monospace" font-size="8.5">JUDGMENT ?</text>
+                    <text x="30" y="128" fill="#5f7674" font-family="'JetBrains Mono', monospace" font-size="10">coverage ends where judgment begins</text>
+                  </svg>
+                </div>
+              </div>
+              <div class="g-face g-back">
+                <span class="flip-hint" aria-hidden="true">&#10226;</span>
+                <div class="g-body">
+                  <p class="b-num">Challenge 03</p>
+                  <h3>Necessary. Not sufficient.</h3>
+                  <p class="g-text">The stack does its job: identity, access, transport. What it can't judge is whether an agent should be trusted with the task in front of it. That missing layer is Veraidyn.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- The approach: the tease -->
+    <section id="approach" class="approach" aria-labelledby="approach-heading">
+      <div class="wrap">
+        <p class="kicker rv">The answer</p>
+        <h2 id="approach-heading" class="rv">Agents earn trust the way people do.</h2>
+        <p class="pull rv"><span class="pull-l">Models change constantly.</span><span class="pull-l accent">The way trust works does not.</span></p>
+
+        <div class="cards3" id="rig">
+          <div class="cardp">
+            <p class="band-n">01</p>
+            <p class="band-t">Trust travels, and it thins.</p>
+            <p class="band-c">Trust is strongest first hand and degrades sharply with distance.</p>
+            <div class="band-fig" role="img" aria-label="Trust passes from a verified operator along a chain of systems, weakening at every hop: direct, second hand, third hand, and then nothing.">
+              <svg id="pf1" viewBox="0 0 1000 150" aria-hidden="true"></svg>
+            </div>
+          </div>
+
+          <div class="cardp">
+            <p class="band-n">02</p>
+            <p class="band-t">Trust is earned in range, and lost outside it.</p>
+            <p class="band-c">Every output is scored against that agent's own envelope, not a global rule.</p>
+            <div class="band-fig" role="img" aria-label="An agent's outputs plot against its own expected range. Each output inside the range earns trust. One output falls outside and most of the earned trust is lost.">
+              <!-- min-y is negative: the out-of-range dot deliberately sits above the envelope -->
+              <svg id="pf2" viewBox="0 -24 1000 196" aria-hidden="true"></svg>
+            </div>
+          </div>
+
+          <div class="cardp">
+            <p class="band-n">03</p>
+            <p class="band-t">Trust is repaired, not revoked.</p>
+            <p class="band-c">Zero trust would stop the agent. We isolate the action and let it earn its way back.</p>
+            <div class="band-fig" role="img" aria-label="The offending action is isolated while the agent keeps running. Two routes lead back to cleared: returning inside the expected range, or being vouched for by a direct friend.">
+              <svg id="pf3" viewBox="0 0 1000 200" aria-hidden="true"></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="spec">
+          <div class="spec-item rv">
+            <p class="spec-k">Modeled on</p>
+            <p class="spec-v">Human trust dynamics</p>
+          </div>
+          <div class="spec-item rv">
+            <p class="spec-k">Computed in</p>
+            <p class="spec-v">Linguistics and probability</p>
+          </div>
+          <div class="spec-item rv">
+            <p class="spec-k">Runs on</p>
+            <p class="spec-v">The stack you already have</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta" aria-labelledby="cta-heading">
+      <div class="cta-glow" aria-hidden="true"></div>
+      <div class="wrap">
+        <h2 id="cta-heading" class="rv cta-stakes"><span class="ct-line">Your agents are already acting.</span><span class="ct-line ct-line-2">Nobody can prove they're trustworthy.</span></h2>
+        <div class="tmap" id="tmap">
+          <p class="tm-legend" aria-hidden="true">
+            <span><i style="background:#22c55e"></i>Trusted</span>
+            <span><i style="background:#f59e0b"></i>Watch</span>
+            <span><i style="background:#3b82f6"></i>In repair</span>
+            <span><i style="background:#ef4444"></i>At risk</span>
+            <span><i style="background:#64748b"></i>Unknown</span>
+          </p>
+          <div role="img" aria-label="A live trust map of the estate. Each system carries its own state: trusted, watch, in repair, at risk or unknown. Trust moves along the connections between them. Unknown systems are discovered and assessed, and a system that degrades enters repair before it is trusted again.">
+            <svg id="tmapSvg" aria-hidden="true"></svg>
+          </div>
+        </div>
+        <p class="ct-pivot rv">Until now.</p>
+        <p class="kicker rv">Coming soon</p>
+        <h3 class="cta-sub rv">We're building it now.</h3>
+        <p class="section-body rv">Join a small group of design partners shaping it before anyone else.</p>
+        <a class="btn-main btn-xl rv" href="mailto:contact@veraidyn.com?subject=Veraidyn%20early%20access">Request early access</a>
+        <p class="cta-alt rv">Or write to us: <a href="mailto:contact@veraidyn.com">contact@veraidyn.com</a></p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <p>Veraidyn · Trust for AI agents</p>
+      <p>© 2026 Veraidyn. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      // nav: transparent over the dark hero, light glass afterwards.
+      var nav = document.querySelector('.nav');
+      var hero = document.querySelector('.hero');
+      if (nav && hero) {
+        document.body.classList.add('navjs');
+        var navState = function () {
+          nav.classList.toggle('over-hero', window.scrollY < hero.offsetHeight - 80);
+        };
+        navState();
+        window.addEventListener('scroll', navState, { passive: true });
+        window.addEventListener('resize', navState);
+      }
+
+      // challenge flip cards: click/tap/keyboard to flip. Runs whenever JS
+      // is available; without JS the backs render stacked below the fronts.
+      var panels = document.querySelectorAll('.gpanel');
+      if (panels.length) {
+        document.body.classList.add('flipjs');
+        panels.forEach(function (c) {
+          c.setAttribute('tabindex', '0');
+          c.setAttribute('role', 'button');
+          c.setAttribute('aria-pressed', 'false');
+          var flip = function () {
+            var on = c.classList.toggle('flipped');
+            c.setAttribute('aria-pressed', on ? 'true' : 'false');
+          };
+          c.addEventListener('click', flip);
+          c.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); }
+          });
+        });
+      }
+
+      // Built before the motion gate so the map renders either way: with
+      // motion it reveals and then runs live, without it we settle it whole.
+      var tmap = buildTrustMap();
+      var pillars = buildPillars();
+
+      if (!('IntersectionObserver' in window) ||
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+          /\bnoanim\b/.test(location.search)) {
+        if (tmap) tmap.settle();
+        if (pillars) pillars.settle();
+        return; // content stays visible, no scroll-reveal
+      }
+      document.body.classList.add('js');
+
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.rv').forEach(function (el) { io.observe(el); });
+
+
+      // the three pillars: each band sweeps left to right, then hands down
+      var rigEl = document.getElementById('rig');
+      if (pillars && rigEl) {
+        var rigIo = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { rigIo.disconnect(); pillars.reveal(); }
+          });
+        }, { threshold: 0.2 });
+        rigIo.observe(rigEl);
+      }
+
+      // the close: the estate assembles, then keeps running
+      var tmEl = document.getElementById('tmap');
+      if (tmap && tmEl) {
+        var tmIo = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { tmIo.disconnect(); tmap.reveal(); }
+          });
+        }, { threshold: 0.25 });
+        tmIo.observe(tmEl);
+      }
+
+      setTimeout(function () {
+        document.querySelectorAll('.rv:not(.in)').forEach(function (el) { el.classList.add('in'); });
+        // only force the close if it is already on screen, so the sequence
+        // is never spent while the visitor is still further up the page
+        if (tmap && tmEl && tmEl.getBoundingClientRect().top < window.innerHeight) tmap.reveal();
+        if (pillars && rigEl && rigEl.getBoundingClientRect().top < window.innerHeight) pillars.reveal();
+      }, 3500);
+
+      // ---------------------------------------------------------------
+      // The three pillars. Nodes reuse the trust map's tile and state
+      // language on purpose, so the two sections read as one product.
+      function buildPillars() {
+        var s1 = document.getElementById('pf1'), s2 = document.getElementById('pf2'), s3 = document.getElementById('pf3');
+        if (!s1 || !s2 || !s3) return null;
+
+        var NS = 'http://www.w3.org/2000/svg';
+        var C = { trusted: '#22c55e', watch: '#f59e0b', repair: '#3b82f6', risk: '#ef4444', unknown: '#64748b' };
+        var ICONS = {
+          monitor: '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
+          server: '<rect x="2" y="3" width="20" height="8" rx="2"/><rect x="2" y="13" width="20" height="8" rx="2"/><path d="M6 7h.01M6 17h.01"/>',
+          cpu: '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/>',
+          bot: '<path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2M20 14h2M9 13v2M15 13v2"/>',
+          box: '<path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v9"/>'
+        };
+
+        function el(t, a, h) { var n = document.createElementNS(NS, t); for (var k in a || {}) n.setAttribute(k, a[k]); if (h) n.innerHTML = h; return n; }
+        function txt(n, v) { n.textContent = v; return n; }
+        function wipe(s) { while (s.firstChild) s.removeChild(s.firstChild); }
+        function tile(g, x, y, icon, label, state, size) {
+          size = size || 58;
+          var col = C[state], h = size / 2;
+          var t = el('g', { transform: 'translate(' + x + ',' + y + ')' });
+          var r = el('rect', { 'class': 'p-tile', x: -h, y: -h, width: size, height: size, rx: 13, stroke: col });
+          var ic = el('g', { 'class': 'p-ic', stroke: col,
+            transform: 'translate(' + (-size * 0.23) + ',' + (-size * 0.23) + ') scale(' + ((size * 0.46) / 24) + ')' }, ICONS[icon]);
+          t.appendChild(r); t.appendChild(ic);
+          t.appendChild(txt(el('text', { 'class': 'p-lab', x: 0, y: h + 24, 'text-anchor': 'middle' }), label));
+          g.appendChild(t);
+          return { rect: r, icon: ic };
+        }
+        function setState(o, st) { o.rect.setAttribute('stroke', C[st]); o.icon.setAttribute('stroke', C[st]); }
+
+        var timers = [], ran = false;
+        function at(ms, fn) { timers.push(setTimeout(fn, ms)); }
+
+        // ---- 01: transitive trust. The relationship words are the point. ----
+        var CHAIN = [
+          { icon: 'monitor', label: 'Verified operator', end: 'trusted' },
+          { icon: 'server',  label: 'Orchestrator',      end: 'trusted', w: '0.92', rel: 'DIRECT' },
+          { icon: 'cpu',     label: 'Triage model',      end: 'watch',   w: '0.58', rel: 'SECOND HAND' },
+          { icon: 'bot',     label: 'Support agent',     end: 'watch',   w: '0.24', rel: 'THIRD HAND' },
+          { icon: 'box',     label: 'Batch job',         end: 'unknown', w: '0.00', rel: 'STRANGER' }
+        ];
+        var t1 = [], c1 = [];
+        function draw1() {
+          wipe(s1); t1 = []; c1 = [];
+          var xs = [80, 290, 500, 710, 905], y = 78;
+          for (var i = 1; i < CHAIN.length; i++) {
+            var g = el('g', { 'class': 'p-fade' });
+            var x0 = xs[i - 1] + 36, x1 = xs[i] - 36, dead = CHAIN[i].w === '0.00';
+            g.appendChild(el('line', { 'class': 'p-conn' + (dead ? ' dead' : ''), x1: x0, y1: y, x2: x1, y2: y }));
+            if (!dead) g.appendChild(el('path', { 'class': 'p-conn', d: 'M' + (x1 - 10) + ' ' + (y - 6) + ' L' + x1 + ' ' + y + ' L' + (x1 - 10) + ' ' + (y + 6) }));
+            var mid = (x0 + x1) / 2;
+            g.appendChild(txt(el('text', { 'class': 'p-num', x: mid, y: y - 20, 'text-anchor': 'middle' }), CHAIN[i].w));
+            g.appendChild(txt(el('text', { 'class': 'p-rel', x: mid, y: y + 32, 'text-anchor': 'middle' }), CHAIN[i].rel));
+            s1.appendChild(g); c1.push(g);
+          }
+          CHAIN.forEach(function (n, i) { t1.push(tile(s1, xs[i], y, n.icon, n.label, i === 0 ? 'trusted' : 'unknown')); });
+        }
+        function play1() {
+          c1.forEach(function (g, i) {
+            at(350 + i * 620, function () { g.classList.add('on'); });
+            at(620 + i * 620, function () { setState(t1[i + 1], CHAIN[i + 1].end); });
+          });
+        }
+
+        // ---- 02: judged against its own envelope ----
+        var SAMPLES = [0.15, -0.25, 0.32, -0.08, 0.2, -0.3, 0.1, 0.34, -0.18, 0.22, 2.4, -0.12];
+        var segs = [], dots = [];
+        function draw2() {
+          wipe(s2); segs = []; dots = [];
+          var cy = 62, hh = 38, x0 = 150, x1 = 965;
+          s2.appendChild(el('rect', { 'class': 'p-env', x: x0, y: cy - hh, width: x1 - x0, height: hh * 2, rx: 10 }));
+          ['EXPECTED', 'RANGE'].forEach(function (t, i) {
+            s2.appendChild(txt(el('text', { 'class': 'p-envlab', x: x0 - 16, y: cy - 6 + i * 20, 'text-anchor': 'end' }), t));
+          });
+          SAMPLES.forEach(function (v, i) {
+            var x = x0 + 40 + i * ((x1 - x0 - 70) / (SAMPLES.length - 1));
+            var bad = Math.abs(v) > 1, y = bad ? cy - hh - 30 : cy + v * hh;
+            var g = el('g', { 'class': 'p-fade' });
+            g.appendChild(el('circle', { 'class': 'p-dot' + (bad ? ' bad' : ''), cx: x, cy: y, r: bad ? 8 : 6 }));
+            if (bad) {
+              g.appendChild(el('line', { 'class': 'p-conn', x1: x, y1: y + 10, x2: x, y2: cy - hh, stroke: '#f0a63c', 'stroke-dasharray': '3 3' }));
+              g.appendChild(txt(el('text', { 'class': 'p-isolab', x: x + 16, y: y + 5 }), 'OUT OF RANGE'));
+            }
+            s2.appendChild(g); dots.push({ g: g, bad: bad });
+          });
+          // a segmented meter, not a chart: trust reads as a state
+          s2.appendChild(txt(el('text', { 'class': 'p-envlab', x: x0, y: 150 }), 'TRUST'));
+          for (var i = 0; i < 12; i++) {
+            var r = el('rect', { 'class': 'p-seg', x: 222 + i * 62, y: 136, width: 52, height: 18, rx: 4 });
+            s2.appendChild(r); segs.push(r);
+          }
+        }
+        function play2(t0) {
+          var filled = 0;
+          dots.forEach(function (d, i) {
+            at(t0 + i * 300, function () {
+              d.g.classList.add('on');
+              if (d.bad) {
+                segs.forEach(function (r, j) { r.classList.remove('on'); if (j > 2) r.classList.add('lost'); });
+                filled = 3;
+              } else if (filled < segs.length) {
+                segs[filled].classList.remove('lost'); segs[filled].classList.add('on'); filled++;
+              }
+            });
+          });
+        }
+
+        // ---- 03: the action is isolated, the agent is not ----
+        var p3 = {}, f3 = [];
+        function draw3() {
+          wipe(s3); f3 = [];
+          var y = 92;
+          var iso = el('g', { 'class': 'p-fade' });
+          iso.appendChild(el('rect', { 'class': 'p-iso', x: 34, y: y - 48, width: 200, height: 96, rx: 12 }));
+          iso.appendChild(el('circle', { 'class': 'p-dot bad', cx: 134, cy: y - 8, r: 8 }));
+          iso.appendChild(el('line', { 'class': 'p-conn', x1: 118, y1: y - 24, x2: 150, y2: y + 8, stroke: '#ef4444' }));
+          iso.appendChild(txt(el('text', { 'class': 'p-isolab', x: 134, y: y + 32, 'text-anchor': 'middle' }), 'ACTION ISOLATED'));
+          s3.appendChild(iso); f3.push(iso);
+
+          p3.agent = tile(s3, 370, y, 'bot', 'Support agent', 'risk', 62);
+          var still = el('g', { 'class': 'p-fade' });
+          still.appendChild(txt(el('text', { 'class': 'p-rel', x: 370, y: y + 80, 'text-anchor': 'middle' }), 'STILL RUNNING'));
+          s3.appendChild(still); f3.push(still);
+          s3.appendChild(el('line', { 'class': 'p-conn', x1: 248, y1: y, x2: 330, y2: y }));
+
+          var r1 = el('g', { 'class': 'p-fade' });
+          r1.appendChild(el('path', { 'class': 'p-route', d: 'M410 ' + (y - 14) + ' C 520 ' + (y - 62) + ', 650 ' + (y - 68) + ', 790 ' + (y - 48) }));
+          r1.appendChild(txt(el('text', { 'class': 'p-routelab', x: 600, y: y - 76, 'text-anchor': 'middle' }), 'back inside the range'));
+          var r2 = el('g', { 'class': 'p-fade' });
+          r2.appendChild(el('path', { 'class': 'p-route', d: 'M410 ' + (y + 14) + ' C 520 ' + (y + 62) + ', 650 ' + (y + 68) + ', 790 ' + (y + 48) }));
+          r2.appendChild(txt(el('text', { 'class': 'p-routelab', x: 600, y: y + 92, 'text-anchor': 'middle' }), 'vouched by a direct friend'));
+          s3.appendChild(r1); s3.appendChild(r2); f3.push(r1, r2);
+
+          s3.appendChild(el('path', { 'class': 'p-conn', d: 'M796 ' + (y - 48) + ' C 850 ' + (y - 36) + ', 880 ' + (y - 18) + ', 902 ' + y }));
+          s3.appendChild(el('path', { 'class': 'p-conn', d: 'M796 ' + (y + 48) + ' C 850 ' + (y + 36) + ', 880 ' + (y + 18) + ', 902 ' + y }));
+          p3.back = tile(s3, 940, y, 'bot', 'Cleared', 'unknown', 62);
+        }
+        function play3(t0) {
+          at(t0,        function () { f3[0].classList.add('on'); });
+          at(t0 + 600,  function () { f3[1].classList.add('on'); setState(p3.agent, 'repair'); });
+          at(t0 + 1300, function () { f3[2].classList.add('on'); });
+          at(t0 + 1800, function () { f3[3].classList.add('on'); });
+          at(t0 + 2700, function () { setState(p3.back, 'trusted'); });
+        }
+
+        function drawAll() { draw1(); draw2(); draw3(); }
+
+        // no motion: every band already reads complete, just land the end states
+        function settle() {
+          drawAll();
+          CHAIN.forEach(function (n, i) { if (i) setState(t1[i], n.end); });
+          var filled = 0;
+          dots.forEach(function (d) {
+            if (d.bad) { segs.forEach(function (r, j) { r.classList.remove('on'); if (j > 2) r.classList.add('lost'); }); filled = 3; }
+            else if (filled < segs.length) { segs[filled].classList.remove('lost'); segs[filled].classList.add('on'); filled++; }
+          });
+          setState(p3.agent, 'repair');
+          setState(p3.back, 'trusted');
+        }
+
+        function reveal() {
+          if (ran) return;
+          ran = true;
+          play1();
+          play2(3200);
+          play3(7600);
+        }
+
+        drawAll();
+        return { reveal: reveal, settle: settle };
+      }
+
+      // ---------------------------------------------------------------
+      // The trust map: the estate as the product sees it.
+      // One node list and one edge list feed both layouts, so the wide and
+      // narrow arrangements can never drift apart.
+      function buildTrustMap() {
+        var svg = document.getElementById('tmapSvg');
+        var box = document.getElementById('tmap');
+        if (!svg || !box) return null;
+
+        var NS = 'http://www.w3.org/2000/svg';
+        var C = { trusted: '#22c55e', watch: '#f59e0b', repair: '#3b82f6', risk: '#ef4444', unknown: '#64748b' };
+
+        var ICONS = {
+          database: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/>',
+          cpu: '<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/>',
+          bot: '<path d="M12 8V4H8"/><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M2 14h2M20 14h2M9 13v2M15 13v2"/>',
+          server: '<rect x="2" y="3" width="20" height="8" rx="2"/><rect x="2" y="13" width="20" height="8" rx="2"/><path d="M6 7h.01M6 17h.01"/>',
+          monitor: '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
+          box: '<path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v9"/>'
+        };
+
+        var NODES = [
+          { label: 'Vector store',       icon: 'database', state: 'repair'  },
+          { label: 'Triage model',       icon: 'cpu',      state: 'trusted' },
+          { label: 'Coding assistant',   icon: 'bot',      state: 'risk'    },
+          { label: 'Orchestrator',       icon: 'server',   state: 'trusted' },
+          { label: 'Relying app',        icon: 'monitor',  state: 'unknown' },
+          { label: 'Reconciliation bot', icon: 'bot',      state: 'trusted' },
+          { label: 'Support agent',      icon: 'bot',      state: 'trusted' },
+          { label: 'Records API',        icon: 'box',      state: 'unknown' }
+        ];
+
+        // 'latent' relationships do not exist yet; discovery draws them in
+        var EDGES = [
+          { a: 1, b: 0, state: 'risk' },
+          { a: 2, b: 3, state: 'risk' },
+          { a: 1, b: 3 }, { a: 1, b: 6 }, { a: 1, b: 5 },
+          { a: 3, b: 5 }, { a: 3, b: 6 },
+          { a: 5, b: 6, state: 'watch' },
+          { a: 6, b: 7, latent: true },
+          { a: 3, b: 4, latent: true }
+        ];
+
+        // Both unknowns are discovered the same way and land differently.
+        // Being seen is not the same as being trusted.
+        var DISCOVERIES = [
+          { edge: 8, node: 7, via: 'watch', end: 'trusted' },
+          { edge: 9, node: 4, via: 'watch', end: 'watch'   }
+        ];
+
+        var LAYOUTS = {
+          wide: {
+            w: 1200, h: 500, tile: 46, icon: 22, label: 12, drop: 39,
+            p: [[742,86],[330,166],[150,268],[620,240],[982,262],[218,382],[562,396],[866,424]]
+          },
+          narrow: {
+            w: 400, h: 690, tile: 44, icon: 21, label: 12, drop: 37,
+            p: [[300,64],[112,150],[62,300],[250,248],[338,404],[92,462],[228,524],[330,624]]
+          }
+        };
+
+        var L, gEdge, gDot, gNode, tiles = [], icons = [], lines = [];
+        var timers = [], loopTimer = null, flowTimer = null, running = false;
+
+        function el(tag, attrs, html) {
+          var n = document.createElementNS(NS, tag);
+          for (var k in attrs || {}) n.setAttribute(k, attrs[k]);
+          if (html) n.innerHTML = html;
+          return n;
+        }
+        function at(ms, fn) { timers.push(setTimeout(fn, ms)); }
+        function stop() {
+          timers.forEach(clearTimeout); timers = [];
+          if (loopTimer) { clearTimeout(loopTimer); loopTimer = null; }
+          if (flowTimer) { clearInterval(flowTimer); flowTimer = null; }
+        }
+
+        function draw() {
+          L = window.innerWidth < 760 ? LAYOUTS.narrow : LAYOUTS.wide;
+          svg.setAttribute('viewBox', '0 0 ' + L.w + ' ' + L.h);
+          while (svg.firstChild) svg.removeChild(svg.firstChild);
+          tiles = []; icons = []; lines = [];
+
+          // connectors sit behind the tiles, the way the console draws them
+          gEdge = el('g'); gDot = el('g'); gNode = el('g');
+          svg.appendChild(gEdge); svg.appendChild(gDot); svg.appendChild(gNode);
+
+          EDGES.forEach(function (e) {
+            var A = L.p[e.a], B = L.p[e.b];
+            var line = el('line', { 'class': 'tm-edge', x1: A[0], y1: A[1], x2: B[0], y2: B[1] });
+            if (e.state) { line.setAttribute('stroke', C[e.state]); line.classList.add('stated'); }
+            if (e.latent) { line.style.opacity = 0; e.shown = false; }
+            gEdge.appendChild(line);
+            lines.push(line);
+          });
+
+          NODES.forEach(function (n, i) {
+            var pt = L.p[i], col = C[n.state], h = L.tile / 2;
+            var g = el('g', { 'class': 'tm-node', transform: 'translate(' + pt[0] + ',' + pt[1] + ')' });
+            g.appendChild(el('rect', { 'class': 'tm-tile', x: -h, y: -h, width: L.tile, height: L.tile, rx: 11, stroke: col }));
+            var ic = el('g', { 'class': 'tm-icon', stroke: col,
+              transform: 'translate(' + (-L.icon / 2) + ',' + (-L.icon / 2) + ') scale(' + (L.icon / 24) + ')' }, ICONS[n.icon]);
+            g.appendChild(ic);
+            var t = el('text', { 'class': 'tm-label', x: 0, y: L.drop, 'text-anchor': 'middle', 'font-size': L.label });
+            t.textContent = n.label;
+            g.appendChild(t);
+            gNode.appendChild(g);
+            tiles.push(g.querySelector('.tm-tile')); icons.push(ic);
+          });
+        }
+
+        function setState(i, state) {
+          tiles[i].setAttribute('stroke', C[state]);
+          icons[i].setAttribute('stroke', C[state]);
+        }
+        function setEdge(i, state) {
+          if (state) lines[i].setAttribute('stroke', C[state]);
+          else lines[i].removeAttribute('stroke');
+          lines[i].classList.toggle('stated', !!state);
+        }
+        function edgesOf(node) {
+          var out = [];
+          EDGES.forEach(function (e, i) { if ((e.a === node || e.b === node) && !e.latent) out.push(i); });
+          return out;
+        }
+
+        // a reading leaving one system and landing on another
+        function flow(i, reverse, colour) {
+          var e = EDGES[i];
+          if (e.latent && !e.shown) return;
+          var A = L.p[reverse ? e.b : e.a], B = L.p[reverse ? e.a : e.b];
+          var dot = el('circle', { r: 3.4, cx: 0, cy: 0, fill: colour });
+          dot.style.filter = 'drop-shadow(0 0 4px ' + colour + ')';
+          gDot.appendChild(dot);
+          var a = dot.animate([
+            { transform: 'translate(' + A[0] + 'px,' + A[1] + 'px)', opacity: 0 },
+            { opacity: 1, offset: 0.15 },
+            { opacity: 1, offset: 0.85 },
+            { transform: 'translate(' + B[0] + 'px,' + B[1] + 'px)', opacity: 0 }
+          ], { duration: 1100, easing: 'cubic-bezier(0.4,0,0.5,1)' });
+          // onfinish alone is not enough: a backgrounded tab throttles the
+          // animation but not the spawner, so dots would pile up forever.
+          a.onfinish = function () { dot.remove(); };
+          setTimeout(function () { dot.remove(); }, 1500);
+        }
+
+        function startFlow() {
+          if (flowTimer) return;
+          flowTimer = setInterval(function () {
+            if (document.hidden) return;
+            var live = [];
+            EDGES.forEach(function (e, i) { if (!e.latent || e.shown) live.push(i); });
+            var i = live[Math.floor(Math.random() * live.length)];
+            flow(i, Math.random() < 0.5, EDGES[i].state ? C[EDGES[i].state] : '#7ce7e8');
+          }, 900);
+        }
+
+        // an unknown system is discovered: it connects, then it earns a state
+        function discover(n) {
+          var d = DISCOVERIES[n];
+          EDGES[d.edge].shown = true;
+          lines[d.edge].style.opacity = 1;
+          at(500, function () { setState(d.node, d.via); });
+          at(1400, function () { setState(d.node, d.end); });
+        }
+
+        function ring(node, colour) {
+          var pt = L.p[node];
+          var c = el('circle', { cx: pt[0], cy: pt[1], r: L.tile * 0.62, fill: 'none', stroke: colour, 'stroke-width': 2 });
+          c.style.transformOrigin = pt[0] + 'px ' + pt[1] + 'px';
+          svg.appendChild(c);
+          var a = c.animate([{ transform: 'scale(0.7)', opacity: 0.9 }, { transform: 'scale(2.4)', opacity: 0 }],
+                            { duration: 1000, easing: 'ease-out' });
+          a.onfinish = function () { c.remove(); };
+          setTimeout(function () { c.remove(); }, 1400);
+        }
+
+        function degrade() {
+          setState(6, 'risk');
+          edgesOf(6).forEach(function (i) { setEdge(i, 'risk'); });
+          ring(6, C.risk);
+        }
+        function repair() {
+          setState(6, 'repair');
+          edgesOf(6).forEach(function (i) { setEdge(i, 'watch'); });
+          at(1800, function () {
+            setState(6, 'trusted');
+            edgesOf(6).forEach(function (i) { setEdge(i, EDGES[i].state); });
+          });
+        }
+        function reset() {
+          NODES.forEach(function (n, i) { setState(i, n.state); });
+          EDGES.forEach(function (e, i) {
+            setEdge(i, e.state);
+            if (e.latent) { e.shown = false; lines[i].style.opacity = 0; }
+          });
+        }
+
+        function loop() {
+          var cycle = function () {
+            at(300,  function () { discover(0); });  // records api joins, earns trusted
+            at(2600, function () { discover(1); });  // relying app joins, only earns watch
+            at(4600, degrade);
+            at(6600, repair);
+            at(9800, reset);
+            loopTimer = setTimeout(cycle, 11600);
+          };
+          cycle();
+        }
+
+        function settle() { draw(); }
+
+        function reveal() {
+          if (running) return;
+          running = true;
+          box.classList.add('go');
+
+          tiles.forEach(function (t, i) {
+            var g = t.parentNode;
+            g.style.opacity = 0;
+            at(70 * i, function () { g.style.opacity = 1; });
+          });
+
+          lines.forEach(function (line, i) {
+            if (EDGES[i].latent) return;
+            var len = Math.hypot(line.x2.baseVal.value - line.x1.baseVal.value,
+                                 line.y2.baseVal.value - line.y1.baseVal.value);
+            line.style.strokeDasharray = len;
+            line.style.strokeDashoffset = len;
+            at(560 + i * 90, function () {
+              line.style.transition = 'stroke-dashoffset 0.6s ease, stroke 0.5s ease, opacity 0.5s ease';
+              line.style.strokeDashoffset = 0;
+            });
+          });
+
+          at(560 + EDGES.length * 90 + 500, function () {
+            lines.forEach(function (l) { l.style.strokeDasharray = ''; l.style.strokeDashoffset = ''; });
+            startFlow();
+            loop();
+          });
+        }
+
+        draw();
+
+        // the two layouts share their data, so a breakpoint cross just redraws
+        var wasNarrow = window.innerWidth < 760;
+        window.addEventListener('resize', function () {
+          var now = window.innerWidth < 760;
+          if (now === wasNarrow) return;
+          wasNarrow = now;
+          stop();
+          draw();
+          if (running) { startFlow(); loop(); }
+        });
+
+        return { reveal: reveal, settle: settle };
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,4 +1,67 @@
-.DS_Store
-*.swp
+# =====================================================================
+# This repo is PUBLIC. Only what a visitor's browser needs may be
+# committed. Everything else stays on local disk.
+#
+# What ships (7 files):
+#   index.html
+#   vercel.json
+#   logo-nav.png  logo-hero.png  favicon.png  apple-touch-icon.png  og.png
+#
+# Before adding anything, ask: does a visitor's browser load this?
+# If not, it belongs below.
+# =====================================================================
+
+# --- Background material. Never publish. -----------------------------
+# Strategy, positioning, IP boundaries and design rationale all live in
+# markdown. None of it serves the page and some of it is commercially
+# sensitive.
+*.md
+
+# Source documents. A stray pitch deck or whitepaper in a public repo
+# is the worst-case disclosure, so block the formats outright.
+*.pptx
+*.potx
+*.docx
+*.dotx
+*.pdf
+*.key
+*.numbers
+*.xlsx
+
+# --- Design explorations and prototypes ------------------------------
+# Useful history, but they expose rejected directions and internal
+# review notes. Keep them local.
+hero-*.html
+approach-*.html
+gap3-options.html
+cta-map.html
+cta-mesh.html
+answer-*.html
+combined-mockups.html
+
+# --- Build and review artefacts --------------------------------------
+# Point-in-time snapshot of index.html plus its generator. The snapshot
+# would go stale against the real page and must never be served.
+veraidyn-review.html
+make-review.py
+
+# Unused source artwork. The page never loads it.
+logo.png
+
+# --- Tooling and local config ----------------------------------------
+.claude/
+.vercel/
+.env
+.env.*
+node_modules/
 .venv/
 __pycache__/
+
+# --- OS and editor cruft ---------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+.idea/
+.vscode/
