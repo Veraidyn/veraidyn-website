@@ -54,6 +54,22 @@ make-review.py
 # Unused source artwork. The page never loads it.
 logo.png
 
+# --- Video -----------------------------------------------------------
+# Masters and working files stay local. Only the encoded deliverable in
+# assets/video/ is served, and it is copied there deliberately rather
+# than committed from the editing folder.
+#
+# This matters more than for other assets: a binary committed to a
+# public repo is permanent and recoverable from history even after it is
+# deleted, and a 27MB master re-committed on each revision compounds
+# that. Encode locally, check it, then publish one copy.
+assets/Demos/
+*.mov
+*.MOV
+*.avi
+*.mkv
+*.webm.part
+
 # --- Tooling and local config ----------------------------------------
 .claude/
 .vercel/
