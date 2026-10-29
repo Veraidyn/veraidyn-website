@@ -116,12 +116,18 @@
     }
     body.navjs .nav.over-hero .nav-links a { color: #cfe5e4; }
     body.navjs .nav.over-hero .nav-links a:hover { color: #ffffff; }
+    /* padding-top/bottom, never the shorthand. This element is class="wrap
+       nav-inner", and `padding: 0.8rem 0` rewrites all four sides, zeroing
+       the horizontal gutter .wrap sets on this very element at equal
+       specificity. That is what left the brand hard against the left edge
+       and the nav 24px out of line with every heading below it. */
     .nav-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
-      padding: 0.8rem 0;
+      padding-top: 0.8rem;
+      padding-bottom: 0.8rem;
     }
     .brand { display: flex; align-items: center; }
     .brand:hover { text-decoration: none; }
@@ -185,13 +191,6 @@
       .nav-toggle { display: flex; }
       .nav-inner > .btn { margin-left: auto; }
 
-      /* .nav-inner carries class="wrap nav-inner", but its own padding
-         shorthand zeroes the horizontal gutter .wrap sets, at equal
-         specificity and later in the file. That left the brand at x=0 and
-         put the toggle hard against the right edge. Restored here only;
-         the desktop nav is still edge to edge as it has always shipped. */
-      .nav-inner { padding-left: 1.5rem; padding-right: 1.5rem; }
-
       /* THE AWARD BANNER COLLISION. .hero-banner is absolutely positioned
          inside the hero, so it scrolls up behind the nav while the nav
          stays put. Over the transparent hero nav that read as the emblem
@@ -238,7 +237,11 @@
        there. 360px is the narrowest common Android width and clears it
        untouched, so these trims are scoped under that. */
     @media (max-width: 359px) {
-      .nav-inner { gap: 0.6rem; padding-left: 1rem; padding-right: 1rem; }
+      /* Trimming the brand and the CTA is enough on its own to clear 320px,
+         so the gutter is deliberately left alone: narrowing it here would
+         pull the nav out of line with the content column again, which is
+         the whole thing the padding-top/bottom rule above exists to fix. */
+      .nav-inner { gap: 0.6rem; }
       .logo-img { height: 34px; }
       .nav-inner > .btn { font-size: 0.82rem; padding: 0.55rem 0.85rem; }
     }
