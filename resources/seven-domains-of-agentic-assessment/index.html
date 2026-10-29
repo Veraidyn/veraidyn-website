@@ -40,13 +40,17 @@
           </span>
         </span>
       </a>
-      <div class="nav-links">
+      <div class="nav-links" id="nav-menu">
         <a href="/#why-trust">Why trust</a>
         <a href="/#approach">The approach</a>
         <a href="/resources/" aria-current="page">Resources</a>
         <a href="/company/">Company</a>
       </div>
       <a class="btn" href="mailto:contact@veraidyn.com?subject=Veraidyn%20early%20access">Early access</a>
+      <button class="nav-toggle" type="button" id="nav-toggle"
+              aria-label="Menu" aria-expanded="false" aria-controls="nav-menu">
+        <span class="bars" aria-hidden="true"></span>
+      </button>
     </div>
   </nav>
 
@@ -340,5 +344,6 @@
       <p>© 2026 Veraidyn. All rights reserved.</p>
     </div>
   </footer>
+  <script src="/assets/nav.js" defer></script>
 </body>
 </html>
