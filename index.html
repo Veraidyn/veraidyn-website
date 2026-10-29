@@ -145,8 +145,10 @@
     .wm-fallback .seg-teal { color: var(--vir-bright); }
     .wm-fallback .seg-ai { color: var(--amber); }
     .wm-fallback .div { width: 1px; height: 1.1em; background: #5f7674; opacity: 0.6; margin-left: -0.28em; }
-    .nav-links { display: none; align-items: center; gap: 2rem; }
-    @media (min-width: 880px) { .nav-links { display: flex; } }
+    /* four links now, so tighter gap and a later breakpoint than the
+       original two-link nav used. Keep in step with assets/site.css. */
+    .nav-links { display: none; align-items: center; gap: 1.6rem; }
+    @media (min-width: 940px) { .nav-links { display: flex; } }
     .nav-links a { color: var(--ink-dim); font-size: 0.92rem; font-weight: 500; }
     .nav-links a:hover { color: var(--ink); text-decoration: none; }
     .btn {
@@ -280,6 +282,116 @@
       color: #5e8683;
     }
     .hero-words b { color: #8fd8d6; font-weight: 500; }
+
+    /* ---------- Award credential --------------------------------------
+       The emblem is white lettering on a transparent ground, so it only
+       resolves on a dark surface. That single fact drives everything
+       below. Any replacement mark carries the same constraint: check it
+       against #020c15, not against white.
+
+       One element, two treatments. Wide screens get a corner plaque in
+       the top right of the hero; below 1100px the same element becomes a
+       full-width band across the top, because the plaque's minimum
+       sensible width starts eating the whole screen below that.
+
+       The 73px offset mirrors the hero's own margin-top: -73px, which is
+       what slides the hero under the sticky nav. The two cancel, so the
+       award lands flush against the bottom of the nav whatever the nav's
+       actual height turns out to be. Keep this tied to the hero's
+       margin-top, not to the nav height, or the two will drift apart.
+
+       Absolutely positioned so it does not shift the hero's vertically
+       centered title card.
+
+       If the file is missing the image removes itself and both forms
+       still read as a text credential. */
+    .hero-banner {
+      position: absolute;
+      top: 73px;
+      left: 0;
+      right: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.8rem;
+      padding: 0.55rem 1rem;
+      background: linear-gradient(90deg, rgba(0, 150, 152, 0.10), rgba(0, 181, 183, 0.24) 50%, rgba(0, 150, 152, 0.10));
+      border-bottom: 1px solid rgba(0, 181, 183, 0.28);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      text-align: left;
+    }
+    .hero-banner img { height: 42px; width: auto; flex: none; display: block; }
+    .hero-banner .bn-k {
+      display: block;
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #8fd8d6;
+    }
+    .hero-banner .bn-v {
+      display: block;
+      margin-top: 0.15rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #eef7f6;
+      line-height: 1.15;
+    }
+    /* The break is markup, not wrapping. Letting the browser choose where
+       to break gives a different ragged split at every width; this way the
+       plaque always reads "Startup World Cup / Seattle 2026". It collapses
+       to a single line in the band, where there is width to spare. */
+    .bn-br { display: none; }
+
+    @media (min-width: 1100px) {
+      .hero-banner {
+        left: auto;
+        width: 29%;
+        min-width: 24rem;
+        gap: 1.5rem;
+        padding: 1.15rem 1.9rem;
+        background: linear-gradient(90deg, rgba(0, 150, 152, 0.10), rgba(0, 181, 183, 0.24));
+        border-left: 1px solid rgba(0, 181, 183, 0.28);
+        border-bottom-left-radius: 20px;
+      }
+      .hero-banner img { height: 88px; }
+      .hero-banner .bn-k { font-size: 1rem; letter-spacing: 0.2em; }
+      .hero-banner .bn-v { font-size: 1.5rem; margin-top: 0.3rem; }
+      .bn-br { display: inline; }
+    }
+
+    /* ---------- Credential strip -------------------------------------
+       Sits directly under the dark hero as a quiet first-impression trust
+       signal. Deliberately small: a credential, not a headline. */
+    .cred-strip { border-bottom: 1px solid var(--line); padding: 0.9rem 0; }
+    .cred-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem 1.6rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+    .cred-inner .dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--vir);
+      margin-right: 0.6rem;
+      vertical-align: 1px;
+    }
+    .cred-inner b { color: var(--ink-dim); font-weight: 500; }
+    /* nowrap only where it fits. Below this the label is wider than the
+       screen and body's overflow-x:hidden silently clips the end of it. */
+    .cred-next { color: var(--vir-deep); }
+    @media (min-width: 820px) { .cred-next { white-space: nowrap; } }
+    .cred-next:hover { text-decoration: underline; text-underline-offset: 3px; }
 
     /* ---------- Sections ---------- */
     section { padding: 6.5rem 0; position: relative; }
@@ -684,6 +796,8 @@
       <div class="nav-links">
         <a href="#why-trust">Why trust</a>
         <a href="#approach">The approach</a>
+        <a href="/resources/">Resources</a>
+        <a href="/company/">Company</a>
       </div>
       <a class="btn" href="mailto:contact@veraidyn.com?subject=Veraidyn%20early%20access">Early access</a>
     </div>
@@ -743,6 +857,18 @@
         </div>
       </div>
 
+      <!-- Award credential. A corner plaque at 1100px and up, a full-width
+           band below that. Sits above the ribbons (z-index 2) but below
+           the sticky nav (z-index 40), so it never fights the header. -->
+      <p class="hero-banner">
+        <img src="/assets/logos/startup-world-cup.png" alt="" aria-hidden="true"
+             onerror="this.remove();">
+        <span>
+          <span class="bn-k">Regional finalist</span>
+          <span class="bn-v">Startup World Cup<br class="bn-br"> Seattle 2026</span>
+        </span>
+      </p>
+
       <div class="hero-content">
         <img class="hero-logo" src="/logo-hero.png" alt="Veraidyn">
         <h1 id="hero-heading"><span class="amber">Trust for AI agents.</span></h1>
@@ -754,6 +880,17 @@
       </div>
       <p class="hero-words" aria-hidden="true"><b>Builds</b> · Vouches · Flows · <b>Repairs</b></p>
     </section>
+
+    <!-- Credential band. The award moved into the hero banner above, where
+         the emblem has the dark surface it needs, so this strip now carries
+         only the talks. Repeating the award here would have stated the same
+         credential twice within a screen height of itself. -->
+    <div class="cred-strip">
+      <div class="wrap cred-inner">
+        <a class="cred-next" href="/resources/#speaking">
+          <span class="dot" aria-hidden="true"></span>Speaking at BSides Charleston &amp; Simply Cybercon &rarr;</a>
+      </div>
+    </div>
 
     <!-- Tension: the gap -->
     <section id="why-trust" aria-labelledby="problem-heading">
