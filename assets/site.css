@@ -72,11 +72,30 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .wm-fallback .seg-teal { color: var(--vir-bright); }
 .wm-fallback .seg-ai { color: var(--amber); }
 .wm-fallback .div { width: 1px; height: 1.1em; background: #5f7674; opacity: 0.6; margin-left: -0.28em; }
-.nav-links { display: none; align-items: center; gap: 1.6rem; }
-@media (min-width: 940px) { .nav-links { display: flex; } }
+/* Four links, so a tighter gap than the original two-link nav used.
+
+   Below 940px they do NOT disappear. .nav-inner wraps and the links take a
+   full-width second row, reusing this same markup rather than a duplicate
+   mobile list or a hamburger. They were previously display:none here, which
+   left /resources/ and /company/ with no route to them at all on a phone.
+   Keep in step with the copy of this block in index.html. */
+.nav-links { display: flex; align-items: center; gap: 1.6rem; }
 .nav-links a { color: var(--ink-dim); font-size: 0.92rem; font-weight: 500; }
 .nav-links a:hover { color: var(--ink); text-decoration: none; }
 .nav-links a[aria-current="page"] { color: var(--vir-deep); font-weight: 600; }
+
+@media (max-width: 939px) {
+  .nav-inner { flex-wrap: wrap; row-gap: 0.7rem; }
+  /* order:3 puts the row below the brand and the CTA, which space-between
+     keeps on the first line. flex-wrap on the links themselves lets them
+     fall to two lines below ~340px instead of overflowing. */
+  .nav-links {
+    order: 3; flex-basis: 100%;
+    flex-wrap: wrap; justify-content: center;
+    gap: 0.4rem 1.1rem;
+  }
+  .nav-links a { font-size: 0.86rem; }
+}
 .btn {
   display: inline-block; font-weight: 600; font-size: 0.95rem; color: #fff;
   background: linear-gradient(120deg, var(--vir), var(--vir-deep));
