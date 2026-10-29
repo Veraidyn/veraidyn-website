@@ -45,6 +45,12 @@ combined-mockups.html
 veraidyn-review.html
 make-review.py
 
+# Generated whitepaper PDFs ARE published assets and must ship, so they are
+# re-admitted here despite the blanket *.pdf rule above. Everything else in
+# PDF form is still treated as a source document and stays out.
+!assets/papers/
+!assets/papers/*.pdf
+
 # Unused source artwork. The page never loads it.
 logo.png
 

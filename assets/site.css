@@ -1,0 +1,651 @@
+/* ---------------------------------------------------------------------
+   Veraidyn shared stylesheet for sub-pages (/resources/, /company/).
+
+   index.html still carries its own inline CSS. That page is a hand-tuned
+   one-off and is live, so it is deliberately left alone. The tokens below
+   are copied from it verbatim; if you change a token there, change it here.
+   --------------------------------------------------------------------- */
+
+:root {
+  --bg: #f6f9f9;
+  --card: #ffffff;
+  --tint: #e9f3f3;
+  --ink: #0d1e1f;
+  --ink-dim: #3f5658;
+  --ink-faint: #5f7577;
+  --line: #d8e6e6;
+  --vir: #009698;
+  --vir-deep: #00777a;
+  --vir-bright: #00b5b7;
+  --amber: #f0a63c;
+  --console-bg: #071416;
+  --console-line: #16292b;
+  --max: 68rem;
+  --sans: "Instrument Sans", system-ui, -apple-system, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; background: #020c15; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection { background: #bfe6e6; color: var(--ink); }
+a { color: var(--vir-deep); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--vir-deep); outline-offset: 3px; border-radius: 2px; }
+
+.skip-link {
+  position: absolute; left: -9999px; top: 0;
+  background: var(--vir-deep); color: #fff;
+  padding: 0.6rem 1rem; z-index: 50; font-weight: 600;
+}
+.skip-link:focus { left: 1rem; top: 1rem; }
+
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 1.5rem; }
+
+/* ---------- Nav (markup matches index.html exactly) ---------- */
+.nav {
+  position: sticky; top: 0; z-index: 40;
+  background: rgba(246, 249, 249, 0.82);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+}
+.nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.8rem 0; }
+.brand { display: flex; align-items: center; }
+.brand:hover { text-decoration: none; }
+.logo-tile { background: rgb(2, 12, 21); border-radius: 8px; padding: 0.4rem 0.7rem; display: flex; align-items: center; }
+.logo-img { display: block; height: 44px; width: auto; }
+.wm-fallback {
+  display: none; align-items: center; gap: 0.45rem;
+  font-weight: 600; font-size: 1rem; letter-spacing: 0.28em; text-transform: uppercase;
+}
+.wm-fallback .seg-teal { color: var(--vir-bright); }
+.wm-fallback .seg-ai { color: var(--amber); }
+.wm-fallback .div { width: 1px; height: 1.1em; background: #5f7674; opacity: 0.6; margin-left: -0.28em; }
+.nav-links { display: none; align-items: center; gap: 1.6rem; }
+@media (min-width: 940px) { .nav-links { display: flex; } }
+.nav-links a { color: var(--ink-dim); font-size: 0.92rem; font-weight: 500; }
+.nav-links a:hover { color: var(--ink); text-decoration: none; }
+.nav-links a[aria-current="page"] { color: var(--vir-deep); font-weight: 600; }
+.btn {
+  display: inline-block; font-weight: 600; font-size: 0.95rem; color: #fff;
+  background: linear-gradient(120deg, var(--vir), var(--vir-deep));
+  padding: 0.7rem 1.4rem; border-radius: 6px;
+  box-shadow: 0 6px 18px -8px rgba(0, 120, 122, 0.5);
+  transition: filter 0.15s ease, transform 0.15s ease; white-space: nowrap;
+}
+.btn:hover { filter: brightness(1.08); text-decoration: none; transform: translateY(-1px); color: #fff; }
+
+/* Secondary action. Used where a section needs an onward link but must not
+   compete with the real CTA, which on most pages is the solid .btn sitting
+   a section away. Outline rather than fill keeps the hierarchy obvious. */
+.btn-ghost {
+  display: inline-block; font-weight: 600; font-size: 0.95rem;
+  color: var(--vir-deep); background: transparent;
+  padding: 0.65rem 1.3rem; border: 1px solid var(--line); border-radius: 6px;
+  transition: border-color 0.15s ease, background 0.15s ease; white-space: nowrap;
+}
+.btn-ghost:hover {
+  border-color: var(--vir); background: rgba(0, 150, 152, 0.05);
+  text-decoration: none; color: var(--vir-deep);
+}
+
+/* ---------- Page header band ---------- */
+.phead { padding: 4.5rem 0 3rem; border-bottom: 1px solid var(--line); }
+.kicker {
+  font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase; color: var(--vir-deep);
+  margin-bottom: 1.1rem; display: flex; align-items: center; gap: 0.7rem;
+}
+.kicker::before { content: ""; width: 2rem; height: 1px; background: var(--vir); }
+.phead h1 {
+  font-weight: 700; font-size: clamp(2.1rem, 5.4vw, 3.3rem);
+  line-height: 1.08; letter-spacing: -0.028em; max-width: 20ch;
+}
+.phead .lede { margin-top: 1.3rem; max-width: 46rem; color: var(--ink-dim); font-size: 1.14rem; }
+
+section { padding: 4rem 0; }
+.sect-k {
+  font-family: var(--mono); font-size: 0.7rem; font-weight: 500;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--vir-deep);
+}
+h2 { font-weight: 700; font-size: clamp(1.5rem, 3.4vw, 2.1rem); line-height: 1.14; letter-spacing: -0.022em; }
+
+/* ---------- Editorial list (resources, events) -----------------------
+   A list, not a grid of cards. Rules and type do the work so it reads as
+   an index rather than a box stack. */
+.elist { border-top: 1px solid var(--line); }
+.eitem {
+  display: grid; grid-template-columns: 1fr; gap: 0.5rem;
+  padding: 2rem 0; border-bottom: 1px solid var(--line);
+  transition: background 0.2s ease;
+}
+@media (min-width: 820px) {
+  .eitem { grid-template-columns: 13rem 1fr; gap: 2.5rem; align-items: start; }
+}
+.eitem:hover { background: rgba(0, 150, 152, 0.035); }
+.emeta { display: flex; flex-direction: column; gap: 0.35rem; }
+.etype {
+  font-family: var(--mono); font-size: 0.68rem; font-weight: 500;
+  letter-spacing: 0.15em; text-transform: uppercase; color: var(--vir-deep);
+}
+.edate { font-family: var(--mono); font-size: 0.72rem; color: var(--ink-faint); }
+.eitem h3 { font-weight: 700; font-size: clamp(1.2rem, 2.4vw, 1.55rem); line-height: 1.25; letter-spacing: -0.018em; }
+.eitem h3 a { color: var(--ink); }
+.eitem h3 a:hover { color: var(--vir-deep); text-decoration: none; }
+.esum { margin-top: 0.5rem; color: var(--ink-dim); font-size: 1.02rem; max-width: 46rem; }
+.ego { margin-top: 0.7rem; font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; color: var(--vir-deep); }
+
+/* ---------- Article thumbnails ----------
+   16:9, which is the YouTube thumbnail ratio (1280x720) and close enough to
+   the LinkedIn share ratio that one asset serves both. Lives at the top of
+   the meta column, above the type and date.
+
+   Every thumb degrades to a styled block if the file is missing, via the
+   onerror handler in the markup, so the page is shippable before any
+   artwork exists and a late or misnamed file never shows a broken icon. */
+.ethumb {
+  display: block; position: relative; width: 100%; max-width: 22rem;
+  aspect-ratio: 16 / 9; margin-bottom: 0.9rem;
+  border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
+  background: var(--tint);
+}
+/* Stacked above the placeholder rather than beside it, so a real image
+   simply covers it. The placeholder is painted underneath at all times and
+   is revealed only when the image fails, which also means the layout is
+   identical whether or not the artwork exists. */
+.ethumb img {
+  position: absolute; inset: 0; z-index: 1;
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+
+/* Placeholder. Reads as a deliberate empty state rather than a failure:
+   a viridian wash, a brand mark, and the word PLACEHOLDER so nobody ships
+   it to production by accident. */
+.ethumb .ph {
+  position: absolute; inset: 0; z-index: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 0.4rem;
+  background: linear-gradient(135deg, rgba(0,150,152,0.10), rgba(0,150,152,0.03));
+}
+.ethumb .ph::before {
+  content: ""; width: 1.6rem; height: 1.6rem; border-radius: 50%;
+  border: 2px solid var(--vir); opacity: 0.55;
+}
+.ethumb .ph span {
+  font-family: var(--mono); font-size: 0.6rem; font-weight: 500;
+  letter-spacing: 0.16em; text-transform: uppercase; color: var(--vir-deep);
+  opacity: 0.8;
+}
+a.ethumb:hover { border-color: var(--vir); }
+a.ethumb:hover img { opacity: 0.92; }
+
+@media (min-width: 820px) {
+  /* Inside the 13rem meta column the thumb is ~208x117, which is enough to
+     read at a glance without turning the editorial list into a card grid. */
+  .ethumb { max-width: none; }
+}
+
+/* Planned items: visibly forthcoming, not clickable, not pretending.
+   Applies to both row types, since the talk row is reused for the writing
+   and materials lists where an item can also be forthcoming. */
+.eitem.eplanned, .talk.eplanned { opacity: 0.6; }
+.eitem.eplanned:hover { background: transparent; }
+.eitem.eplanned h3, .talk.eplanned h3 { color: var(--ink-dim); font-weight: 600; }
+.eitem.eplanned .etype, .talk.eplanned .venue { color: var(--ink-faint); }
+
+/* The go-link is a mono cue, not a button. When it wraps a real anchor the
+   anchor must take the cue's color rather than the default link color. */
+.ego a { color: inherit; }
+.ego a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Empty-shelf state. Better than a page with one stale item on it. */
+.eempty {
+  border: 1px dashed var(--line); border-radius: 12px;
+  padding: 2.5rem 2rem; text-align: center; color: var(--ink-dim);
+}
+
+/* ---------- Credential block ---------- */
+.cred {
+  background: var(--console-bg); border: 1px solid var(--console-line);
+  border-radius: 16px; padding: 2.2rem 2rem;
+  box-shadow: 0 26px 60px -34px rgba(7, 20, 22, 0.5);
+}
+.cred h3 { margin-top: 0.7rem; font-weight: 700; font-size: clamp(1.3rem, 2.8vw, 1.8rem); color: #e8f4f3; letter-spacing: -0.02em; line-height: 1.2; }
+.cred p { margin-top: 0.7rem; color: #8fadab; max-width: 42rem; }
+.cred a { color: var(--vir-bright); }
+
+/* Award variant: emblem in its own column beside the text.
+   The Startup World Cup mark is white lettering on a transparent ground,
+   so it only resolves on a dark surface. .cred already is one, which is
+   why the emblem sits inside the card rather than on the tinted section
+   background, where its wordmark would vanish. Same constraint applies to
+   any mark added here later: check it against --console-bg, not white.
+
+   The emblem keeps a column of its own so the body copy can never wrap
+   around it into a ragged shape. Below 720px the two stack and the rule
+   between them becomes a horizontal one. */
+.cred-award-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, #071416 0%, #08191c 55%, #0a2024 100%);
+}
+.cred-mark {
+  position: relative;
+  justify-self: start;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--console-line);
+}
+/* Soft teal bloom behind the mark. Sits under the image, never over it,
+   so the flags keep their own color. */
+.cred-mark::before {
+  content: "";
+  position: absolute;
+  inset: -22% -28%;
+  background: radial-gradient(closest-side, rgba(0, 181, 183, 0.20), transparent 100%);
+  pointer-events: none;
+}
+.cred-mark img {
+  position: relative;
+  display: block;
+  height: 124px;
+  width: auto;
+}
+.cred-award-card .cred-body > :first-child { margin-top: 0; }
+
+/* The program is the headline, not the placing. "Regional finalist" on
+   its own does not say which competition, so Startup World Cup 2026
+   takes the h3 and the placing drops to a pill beneath it. */
+.cred-award-card h3 { font-size: clamp(1.65rem, 3.6vw, 2.35rem); }
+
+/* The placing is the second half of the claim and carries real weight,
+   not a quiet uppercase tag: the card says which competition, then how
+   Veraidyn placed in it. Both lines have to land at a glance.
+
+   Two classes (0,2,0) deliberately, to outrank `.cred p` at (0,1,1). A
+   single-class selector here loses to it on specificity and the line
+   silently inherits the grey body color and its margin. */
+.cred-award-card .cred-placing {
+  margin-top: 0.75rem;
+  font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--vir-bright);
+  max-width: none;
+}
+
+@media (min-width: 720px) {
+  .cred-award-card { grid-template-columns: auto 1fr; gap: 2.6rem; }
+  .cred-mark {
+    padding-bottom: 0;
+    padding-right: 2.6rem;
+    border-bottom: 0;
+    border-right: 1px solid var(--console-line);
+  }
+  .cred-mark img { height: 152px; }
+}
+
+/* ---------- People (founders, advisors) ------------------------------
+   Horizontal rows, not a grid of portrait cards. Reads as a masthead
+   rather than a team-page template. */
+.people { border-top: 1px solid var(--line); }
+.person {
+  display: grid; grid-template-columns: 1fr; gap: 1rem;
+  padding: 2rem 0; border-bottom: 1px solid var(--line);
+}
+@media (min-width: 720px) {
+  .person { grid-template-columns: 7.5rem 1fr; gap: 2rem; align-items: start; }
+}
+.person .shot {
+  width: 7.5rem; height: 7.5rem; border-radius: 12px; object-fit: cover;
+  background: var(--tint); border: 1px solid var(--line); display: block;
+}
+.person .noshot {
+  width: 7.5rem; height: 7.5rem; border-radius: 12px;
+  background: var(--console-bg); border: 1px solid var(--console-line);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 1.5rem; letter-spacing: 0.08em; color: var(--vir-bright);
+}
+/* Self-healing portrait: the monogram sits underneath and the photo covers
+   it when one exists. Same stacking approach as .ethumb, so adding a real
+   headshot means dropping a file at /assets/people/<slug>.jpg and nothing
+   else. No class to swap, so the markup cannot fall out of step with the
+   assets directory. */
+.person .pshot {
+  position: relative; width: 7.5rem; height: 7.5rem; flex: none;
+  border-radius: 12px; overflow: hidden;
+  background: var(--console-bg); border: 1px solid var(--console-line);
+}
+.person .pshot img {
+  position: absolute; inset: 0; z-index: 1;
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  /* Bias the crop upward. The frame is square and headshots are usually
+     portrait, so a centered crop takes equal slices off the top and bottom
+     and clips the top of the head while keeping a lot of jacket. Faces sit
+     above center, so 25% keeps the head whole. Tune per person with an
+     inline style if a particular photo needs it, or supply a square crop
+     and this has no effect. */
+  object-position: 50% 25%;
+}
+.person .pshot .mono {
+  position: absolute; inset: 0; z-index: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 1.5rem; letter-spacing: 0.08em; color: var(--vir-bright);
+}
+
+.person h3 { font-weight: 700; font-size: 1.3rem; letter-spacing: -0.018em; line-height: 1.2; }
+.person .role {
+  margin-top: 0.3rem; font-family: var(--mono); font-size: 0.72rem;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--vir-deep);
+}
+.person .bio { margin-top: 0.8rem; color: var(--ink-dim); max-width: 44rem; }
+.person .links { margin-top: 0.7rem; font-family: var(--mono); font-size: 0.74rem; letter-spacing: 0.06em; }
+
+/* Advisors are lighter weight than founders: no photo, tighter rhythm. */
+.advisors { display: grid; grid-template-columns: 1fr; gap: 0; border-top: 1px solid var(--line); }
+/* Three across, not two. With three advisors a two-column grid orphans the
+   third onto a row of its own, which reads as an afterthought. Going
+   straight from one column to three skips the width band where two columns
+   would produce that orphan again. */
+@media (min-width: 820px) { .advisors { grid-template-columns: repeat(3, 1fr); column-gap: 2.2rem; } }
+.advisor { padding: 1.4rem 0; border-bottom: 1px solid var(--line); }
+.advisor h4 { font-weight: 700; font-size: 1.08rem; letter-spacing: -0.012em; }
+.advisor .role { margin-top: 0.25rem; font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.13em; text-transform: uppercase; color: var(--vir-deep); }
+.advisor .bio { margin-top: 0.45rem; color: var(--ink-dim); font-size: 0.96rem; }
+
+/* ---------- Talks ----------------------------------------------------
+   A speaking slot is credibility, not just a calendar entry, so the talk
+   title carries more weight than the venue. */
+.talk {
+  display: grid; grid-template-columns: 1fr; gap: 0.6rem;
+  padding: 1.8rem 0; border-bottom: 1px solid var(--line);
+}
+@media (min-width: 820px) {
+  .talk { grid-template-columns: 13rem 1fr; gap: 2.5rem; align-items: start; }
+}
+.talk .when { display: flex; flex-direction: column; gap: 0.3rem; }
+.talk .venue { font-family: var(--mono); font-size: 0.72rem; font-weight: 500; letter-spacing: 0.13em; text-transform: uppercase; color: var(--vir-deep); }
+.talk .date { font-family: var(--mono); font-size: 0.74rem; color: var(--ink-faint); }
+.talk h3 { font-weight: 700; font-size: clamp(1.1rem, 2.2vw, 1.4rem); line-height: 1.28; letter-spacing: -0.015em; }
+.talk .blurb { margin-top: 0.5rem; color: var(--ink-dim); font-size: 1rem; max-width: 46rem; }
+/* The talk row is reused for the writing list on the Company page, where
+   the title is a link. Match the editorial list rather than the default
+   link color, so a row of titles does not read as a row of buttons. */
+.talk h3 a { color: var(--ink); }
+.talk h3 a:hover { color: var(--vir-deep); text-decoration: none; }
+
+/* ---------- Company facts ----------------------------------------------
+   A short register of what the company legally is. Diligence readers look
+   for this and most early sites omit it, so stating it plainly is cheap
+   credibility. Wraps to as many columns as fit rather than a fixed count,
+   so adding or removing a fact never breaks the row. */
+/* Sized so all five facts hold one row on desktop. The values are kept
+   short for the same reason: at five columns each cell is about 9rem, so
+   anything longer than "Pre-revenue" wraps and breaks the row. If a sixth
+   fact is added, shorten the values again or accept two rows. */
+.facts {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 1.4rem 1.8rem; margin-top: 2.2rem; padding-top: 1.8rem;
+  border-top: 1px solid var(--line); max-width: 56rem;
+}
+.fact { display: flex; flex-direction: column; gap: 0.35rem; }
+.fact .fk {
+  font-family: var(--mono); font-size: 0.66rem; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-faint);
+}
+.fact .fv { font-weight: 600; color: var(--ink); font-size: 1rem; line-height: 1.3; }
+.facts-note { margin-top: 1.4rem; max-width: 44rem; color: var(--ink-faint); font-size: 0.94rem; }
+
+/* ---------- Simple prose blocks ---------- */
+.prose { max-width: 44rem; }
+.prose p + p { margin-top: 1.1rem; }
+.prose p { color: var(--ink-dim); }
+.prose strong { color: var(--ink); font-weight: 600; }
+
+/* ---------- Long-form article ----------------------------------------
+   Measure is capped near 68 characters. Long-form is the one place on this
+   site where reading comfort beats the wide editorial grid. */
+.art-head { padding: 4.5rem 0 2.6rem; border-bottom: 1px solid var(--line); }
+.art-head .back {
+  font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--vir-deep);
+}
+.art-head h1 {
+  margin-top: 1.4rem;
+  font-weight: 700; font-size: clamp(2rem, 4.8vw, 3rem);
+  line-height: 1.1; letter-spacing: -0.028em; max-width: 24ch;
+}
+.art-head .standfirst {
+  margin-top: 1.4rem; max-width: 42rem;
+  font-size: clamp(1.1rem, 2.2vw, 1.3rem); line-height: 1.5; color: var(--ink-dim);
+}
+.art-meta {
+  margin-top: 1.8rem; display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem;
+  font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--ink-faint);
+}
+.art-meta .tag { color: var(--vir-deep); }
+
+/* Download affordance. Outlined rather than solid so it does not compete
+   with the Early access button in the nav. */
+.art-dl {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  margin-top: 1.6rem; padding: 0.62rem 1.05rem;
+  font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--vir-deep); border: 1px solid var(--vir); border-radius: 6px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.art-dl:hover { background: var(--vir); color: #fff; text-decoration: none; }
+.art-dl .sz { color: var(--ink-faint); letter-spacing: 0.05em; text-transform: none; }
+.art-dl:hover .sz { color: rgba(255, 255, 255, 0.78); }
+
+.art { padding: 3.2rem 0 4.5rem; }
+.art-body { max-width: 38rem; }
+.art-body > p { margin-bottom: 1.3rem; font-size: 1.1rem; line-height: 1.7; color: #26383a; }
+.art-body > p > strong { color: var(--ink); font-weight: 600; }
+.art-body h2 {
+  margin: 3rem 0 1.1rem;
+  font-weight: 700; font-size: clamp(1.4rem, 3vw, 1.75rem);
+  line-height: 1.2; letter-spacing: -0.022em; color: var(--ink);
+}
+.art-body h2:first-child { margin-top: 0; }
+.art-body h3 {
+  margin: 2.1rem 0 0.8rem;
+  font-weight: 700; font-size: clamp(1.08rem, 2.2vw, 1.22rem);
+  line-height: 1.3; letter-spacing: -0.012em; color: var(--ink);
+}
+/* sub-points read as a sequence, so they get a marker rather than a number */
+.art-body h3::before {
+  content: ""; display: inline-block;
+  width: 10px; height: 2px; background: var(--vir);
+  vertical-align: 0.3em; margin-right: 0.6rem;
+}
+.art-body ul { margin: 0 0 1.3rem 0; padding-left: 1.2rem; }
+.art-body li { margin-bottom: 0.7rem; font-size: 1.1rem; line-height: 1.65; color: #26383a; }
+.art-body li strong { color: var(--ink); font-weight: 600; }
+
+/* Abstract block. Papers open with a statement of what is argued, set apart
+   from the body without shouting. */
+.art-body .abstract {
+  margin-bottom: 2.4rem; padding: 1.5rem 1.6rem;
+  background: var(--tint); border-left: 3px solid var(--vir); border-radius: 0 8px 8px 0;
+}
+.art-body .abstract p { margin: 0; font-size: 1.02rem; line-height: 1.65; color: #26383a; }
+.art-body .abstract p + p { margin-top: 0.9rem; }
+.art-body .abstract .lbl {
+  display: block; margin-bottom: 0.6rem;
+  font-family: var(--mono); font-size: 0.66rem; font-weight: 500;
+  letter-spacing: 0.17em; text-transform: uppercase; color: var(--vir-deep);
+}
+
+/* Numbered section headings, set by hand so the numbers survive copy-paste. */
+.art-body h2 .num, .art-body h3 .num { color: var(--vir-deep); font-variant-numeric: tabular-nums; }
+
+/* Control tables. Three columns do not fit the 38rem reading measure, so the
+   table breaks out wider than the body and scrolls on narrow screens. */
+.art-table { margin: 1.8rem 0 2.2rem; }
+.art-table .cap {
+  margin-bottom: 0.7rem;
+  font-family: var(--mono); font-size: 0.68rem; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--vir-deep);
+}
+.art-table .scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+@media (min-width: 1040px) { .art-table { width: 52rem; } }
+.art-table table { border-collapse: collapse; width: 100%; min-width: 42rem; font-size: 0.94rem; }
+.art-table th, .art-table td {
+  text-align: left; vertical-align: top;
+  padding: 0.85rem 1rem 0.85rem 0; border-bottom: 1px solid var(--line);
+}
+.art-table th {
+  font-family: var(--mono); font-size: 0.66rem; font-weight: 500;
+  letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink-faint);
+  border-bottom: 2px solid var(--vir); padding-bottom: 0.6rem;
+}
+.art-table td:first-child { font-weight: 600; color: var(--ink); width: 11rem; padding-right: 1.4rem; }
+.art-table td:last-child {
+  font-family: var(--mono); font-size: 0.78rem; line-height: 1.5;
+  color: var(--ink-faint); width: 13rem;
+}
+.art-table td { color: var(--ink-dim); line-height: 1.55; }
+
+/* A quiet aside: scope notes, caveats, definitions. Not a pull quote. */
+.art-body .note {
+  margin: 1.6rem 0; padding-left: 1.2rem; border-left: 2px solid var(--line);
+  font-size: 1.02rem; line-height: 1.6; color: var(--ink-dim);
+}
+
+/* Illustrative exchange. Shows the SHAPE of a multi-turn probe and nothing
+   more: no verbatim test prompt from the battery belongs in here. The gloss
+   under each turn carries the point, so the probe text stays deliberately
+   generic and is useless as a ready-made attack. */
+.art-body .turns { margin: 1.8rem 0 2.2rem; }
+.art-body .turns .cap {
+  margin-bottom: 0.9rem;
+  font-family: var(--mono); font-size: 0.68rem; font-weight: 500;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--vir-deep);
+}
+.art-body .turn {
+  margin-bottom: 1.1rem; padding-left: 1.2rem;
+  border-left: 2px solid var(--vir);
+}
+.art-body .turn:last-child { margin-bottom: 0; }
+.art-body .turn .tn {
+  display: block; margin-bottom: 0.35rem;
+  font-family: var(--mono); font-size: 0.66rem; font-weight: 500;
+  letter-spacing: 0.13em; text-transform: uppercase; color: var(--ink-faint);
+}
+.art-body .turn .tq {
+  margin: 0 0 0.4rem; font-size: 1.02rem; line-height: 1.55; color: var(--ink);
+}
+.art-body .turn .tg {
+  margin: 0; font-size: 0.92rem; line-height: 1.55; color: var(--ink-faint);
+}
+
+/* Retired for long-form: a pull quote is an editorial device and it makes an
+   analytical piece read as marketing. Kept only for legacy pages. */
+.art-body .stand {
+  margin: 2.2rem 0;
+  padding-left: 1.5rem;
+  border-left: 3px solid var(--vir);
+  font-size: clamp(1.25rem, 2.6vw, 1.55rem);
+  font-weight: 700; line-height: 1.3; letter-spacing: -0.018em; color: var(--ink);
+}
+
+.art-foot {
+  margin-top: 3.5rem; padding-top: 1.8rem; border-top: 1px solid var(--line);
+  max-width: 38rem; color: var(--ink-faint); font-size: 0.96rem;
+}
+.art-foot a { font-weight: 600; }
+
+/* ---------- Print: turn an article page into a whitepaper PDF ----------
+   The HTML page is the source of record. Printing it (or Save as PDF) is how
+   the takeaway file is produced, so the two can never drift apart.
+
+   Known limitation: Chrome does not reliably support @page margin boxes with
+   counters, so page numbers come from the browser's own print footer rather
+   than from here. In the print dialog, enable headers and footers for page
+   numbers, or disable them for a cleaner document.
+   --------------------------------------------------------------------- */
+.print-cover { display: none; }
+
+@media print {
+  @page { size: letter portrait; margin: 20mm 18mm; }
+
+  /* Site furniture has no business in a document. */
+  .nav, footer, .skip-link, .art-head .back, .art-foot, .art-dl { display: none !important; }
+
+  html, body { background: #fff !important; color: #000; font-size: 10.5pt; }
+  .wrap { max-width: none; padding: 0; }
+  .art, .art-head { padding: 0; border: 0; }
+
+  /* Print-only title block, so the PDF opens like a paper rather than a
+     screenshot of a web page. */
+  .print-cover { display: block; margin-bottom: 14mm; padding-bottom: 6mm; border-bottom: 1.5pt solid #009698; }
+  .print-cover .pc-brand {
+    font-family: var(--mono); font-size: 8pt; letter-spacing: 0.22em;
+    text-transform: uppercase; color: #00777a;
+  }
+  .print-cover .pc-kind {
+    margin-top: 2mm; font-family: var(--mono); font-size: 8pt;
+    letter-spacing: 0.14em; text-transform: uppercase; color: #5f7577;
+  }
+
+  .art-head h1 { font-size: 22pt; line-height: 1.15; max-width: none; margin: 0 0 4mm; }
+  .art-head .standfirst { font-size: 11pt; line-height: 1.45; max-width: none; color: #333; margin: 0; }
+  .art-meta { display: none; }
+
+  .art-body { max-width: none; }
+  .art-body > p, .art-body li { font-size: 10.5pt; line-height: 1.5; color: #000; }
+  .art-body h2 { font-size: 13pt; margin: 7mm 0 3mm; break-after: avoid; page-break-after: avoid; }
+  .art-body h3 { font-size: 11pt; margin: 5mm 0 2mm; break-after: avoid; page-break-after: avoid; }
+  .art-body h3::before { display: none; }
+
+  .art-body .abstract {
+    background: #f4f8f8 !important; border-left: 2pt solid #009698;
+    padding: 5mm; margin-bottom: 8mm; break-inside: avoid; page-break-inside: avoid;
+  }
+  .art-body .abstract p { font-size: 10pt; }
+  .art-body .note { border-left: 1pt solid #ccc; font-size: 10pt; }
+
+  /* Keep an exchange whole: a probe split across a page break loses the
+     sequence, which is the only thing the figure exists to show. */
+  .art-body .turns { break-inside: avoid; page-break-inside: avoid; margin: 5mm 0 7mm; }
+  .art-body .turn { border-left: 1pt solid #009698; margin-bottom: 4mm; }
+  .art-body .turn .tq { font-size: 10pt; }
+  .art-body .turn .tg { font-size: 9pt; color: #555; }
+
+  /* Tables must collapse back inside the page box and not split across pages. */
+  .art-table { width: auto !important; margin: 5mm 0 7mm; break-inside: avoid; page-break-inside: avoid; }
+  .art-table .scroll { overflow: visible !important; }
+  .art-table table { min-width: 0 !important; width: 100%; font-size: 8.5pt; }
+  .art-table th { font-size: 7pt; border-bottom: 1pt solid #009698; }
+  .art-table td, .art-table th { padding: 2mm 3mm 2mm 0; }
+  .art-table td:first-child { width: 22%; }
+  .art-table td:last-child { width: 26%; font-size: 7pt; }
+  .art-table tr { break-inside: avoid; page-break-inside: avoid; }
+
+  /* Keep paragraphs from orphaning a single line across a page break. */
+  p, li { orphans: 3; widows: 3; }
+
+  a { color: #000; text-decoration: none; }
+}
+
+/* ---------- Footer (matches index.html) ---------- */
+footer { border-top: 1px solid #0f2529; background: #020c15; padding: 2.6rem 0 3.2rem; font-size: 0.88rem; color: #7d9d9b; }
+.footer-inner { display: flex; flex-direction: column; gap: 0.6rem; }
+@media (min-width: 760px) { .footer-inner { flex-direction: row; justify-content: space-between; align-items: baseline; } }
+footer a { color: #9fdedd; }

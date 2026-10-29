@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Measuring trust in agentic systems · Veraidyn</title>
+  <meta name="description" content="Behavior monitoring establishes what an agent did. It does not establish what an agent should be permitted to do next. Requirements for a runtime trust measure.">
+
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://veraidyn.com/resources/trust-lives-between-two-systems/">
+  <meta property="og:title" content="Measuring trust in agentic systems">
+  <meta property="og:description" content="Behavior monitoring establishes what an agent did. It does not establish what an agent should be permitted to do next. Requirements for a runtime trust measure.">
+  <meta property="og:image" content="https://veraidyn.com/assets/thumbs/trust-lives-between-two-systems.jpg">
+  <meta property="og:image:width" content="1280">
+  <meta property="og:image:height" content="720">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Measuring trust in agentic systems">
+  <meta name="twitter:description" content="Behavior monitoring establishes what an agent did. It does not establish what an agent should be permitted to do next. Requirements for a runtime trust measure.">
+  <meta name="twitter:image" content="https://veraidyn.com/assets/thumbs/trust-lives-between-two-systems.jpg">
+
+  <link rel="icon" href="/favicon.png" type="image/png" sizes="48x48">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <nav class="nav" aria-label="Main">
+    <div class="wrap nav-inner">
+      <a class="brand" href="/" aria-label="Veraidyn home">
+        <span class="logo-tile">
+          <img class="logo-img" src="/logo-nav.png" alt="Veraidyn"
+               onerror="this.style.display='none'; document.getElementById('wm-fallback').style.display='flex';">
+          <span class="wm-fallback" id="wm-fallback" aria-hidden="true">
+            <span class="seg-teal">VER</span><span class="div"></span><span class="seg-ai">AI</span><span class="div"></span><span class="seg-teal">DYN</span>
+          </span>
+        </span>
+      </a>
+      <div class="nav-links">
+        <a href="/#why-trust">Why trust</a>
+        <a href="/#approach">The approach</a>
+        <a href="/resources/" aria-current="page">Resources</a>
+        <a href="/company/">Company</a>
+      </div>
+      <a class="btn" href="mailto:contact@veraidyn.com?subject=Veraidyn%20early%20access">Early access</a>
+    </div>
+  </nav>
+
+  <main id="main">
+    <header class="art-head">
+      <div class="wrap">
+        <!-- Print only. Gives the PDF a title block instead of opening like a
+             screenshot of a web page. Hidden on screen by default. -->
+        <div class="print-cover">
+          <p class="pc-brand">Veraidyn</p>
+          <p class="pc-kind">Technical note &middot; veraidyn.com/resources</p>
+        </div>
+        <p><a class="back" href="/resources/">&larr; Resources</a></p>
+        <h1>Measuring trust in agentic systems</h1>
+        <p class="standfirst">Requirements for a runtime trust measure, and why observation alone cannot produce one.</p>
+        <p class="art-meta">
+          <span class="tag">Technical note</span>
+          <span>Draft &middot; not published</span>
+          <span>About 14 minutes</span>
+        </p>
+        <p>
+          <a class="art-dl" href="/assets/papers/measuring-trust-in-agentic-systems.pdf" download>
+            Download PDF <span class="sz">9 pages &middot; 276&nbsp;KB</span>
+          </a>
+        </p>
+      </div>
+    </header>
+
+    <article class="art">
+      <div class="wrap"><div class="art-body">
+
+        <div class="abstract">
+          <span class="lbl">Abstract</span>
+          <p>Behavior monitoring is now standard practice in agentic deployments, and it establishes a useful fact: what an agent did. It does not, on its own, establish the fact an enforcement decision actually requires, which is what an agent should be permitted to do next.</p>
+          <p>This note sets out the requirements for a trust measure capable of supporting that second decision at runtime. We argue that such a measure cannot be a scalar attached to an agent, because trust is a property of a relationship between two parties rather than an attribute carried by one of them. We identify five properties the measure must express, describe the enforcement decisions those properties make available, and set out the limitations and open problems of the approach, including the adversarial case.</p>
+        </div>
+
+        <h2><span class="num">1.</span> Scope and terms</h2>
+
+        <p>Three terms are used throughout in a specific sense. An <strong>agent</strong> is a software system that selects actions under uncertainty rather than executing a predetermined sequence, typically by invoking tools or services on behalf of a principal. <strong>Behavior monitoring</strong> refers to the collection and analysis of observable agent activity: tool invocations, data accessed, outputs produced, timing and sequence. <strong>Trust</strong> is used in the operational sense common to the computational trust literature, meaning a party's expectation that another party will act within some bound, held in conditions where that party's internal reasoning cannot be directly inspected.</p>
+
+        <p>This note concerns the measurement problem only. It does not address enforcement architecture, the mechanics of computing a trust value, or how such a measure maps to any particular regulatory framework. Those are separate questions and several of them are, for us, commercially sensitive.</p>
+
+        <h2><span class="num">2.</span> What behavior monitoring establishes</h2>
+
+        <p>Monitoring is the evidence layer, and nothing that follows is possible without it. We operate behavior monitoring as a component of our own system for exactly this reason: it is the input from which everything downstream is derived.</p>
+
+        <p>What monitoring reliably produces is a record. For a given agent over a given window, an operator can establish which tools were called, in what order, against which data, producing which outputs, at what rate. Where the monitoring is thorough, this record is close to complete, and it is sufficient to answer questions posed in the past tense with confidence.</p>
+
+        <p>The difficulty arises when the record is asked to support a decision in the present tense. An agent is about to invoke a tool. Monitoring can establish that the agent has invoked that tool eleven thousand times without incident. It cannot, by itself, establish whether this twelve-thousandth invocation should proceed, because that determination depends on factors the record does not contain: how far the current request sits from the agent's established pattern, what authority the requesting context actually confers, and what the consequence of being wrong would be.</p>
+
+        <p>This gap is frequently misread as a monitoring coverage problem, and addressed by collecting more signal. Additional signal improves the record. It does not convert the record into a judgment.</p>
+
+        <p>There is a sequencing error underneath this, and it is worth stating directly because it is close to universal. Organizations deploy an agent, begin monitoring it immediately, and look for anomalies. But an anomaly is a deviation from something, and if the something was never characterized then the monitoring produces numbers that cannot be interpreted. Drift detection without prior behavioral characterization is noise monitoring without a signal theory.</p>
+
+        <p>Human relationships handle this ordering instinctively. Nobody can tell whether a stranger is behaving unusually, because no range has been established for them. This is precisely why new relationships begin with low stakes and close attention, and why both are relaxed as the range is mapped. The sequence is characterize, then monitor, then interpret. Deployments that invert it are generating data they have no basis to read.</p>
+
+        <h2><span class="num">3.</span> The limits of a per-agent score</h2>
+
+        <p>The intuitive response is to reduce the monitoring record to a scalar: a trust score per agent, maintained continuously, compared against a threshold at decision time. This approach is attractive because it is simple to implement and simple to explain, and it performs adequately in deployments with few agents and uniform sensitivity.</p>
+
+        <p>It degrades in a specific and predictable way. Consider a support agent with a long record of handling refund requests, which has never accessed the billing database. The refund service has substantial grounds for confidence in this agent. The billing database has almost none, since the agent has established no record with it at all. Both facts are true simultaneously, and both are derived from the same monitoring data.</p>
+
+        <p>A scalar attached to the agent must resolve these into one number, and whichever way it resolves them it will be wrong for one of the two services. Raising the score to reflect the refund record extends unearned confidence to billing. Lowering it to reflect the absent billing record discards evidence the refund service has legitimately accumulated.</p>
+
+        <p>The reduction fails because it misplaces the quantity being measured. Trust in this operational sense is held by one party about another. It is a property of the pair, and a measure that attaches to a single system has already discarded the information that makes it actionable.</p>
+
+        <div class="note">
+          <p>This is not an argument that per-agent scores are useless. They are a reasonable summary statistic for reporting and triage. The argument is that they are the wrong structure for an enforcement decision, which is always made in a specific relational context.</p>
+        </div>
+
+        <h2><span class="num">4.</span> Requirements for a relational trust measure</h2>
+
+        <p>Once trust is treated as pairwise, a set of requirements follows. Each of the five below is stated as a property the measure must be capable of expressing. We make no claim that this list is exhaustive.</p>
+
+        <h3><span class="num">4.1</span> Directionality</h3>
+
+        <p>The measure must distinguish the trust A holds in B from the trust B holds in A, and must permit the two to differ substantially. This is not a formal nicety. In a typical deployment an orchestrator that has supervised a model across many thousands of interactions has grounds for considerable confidence in it, while the model has accumulated no comparable basis for confidence in the orchestrator, and in most architectures has no mechanism to act on one if it had. A measure that collapses the pair into a single symmetric value cannot represent the asymmetry that is actually present.</p>
+
+        <h3><span class="num">4.2</span> Reference to an agent-specific baseline</h3>
+
+        <p>Deviation is only meaningful relative to an established pattern, and the pattern differs by agent. An agent that has consistently issued on the order of forty tool calls per hour is unremarkable at forty one. An agent whose established maximum is three is substantially outside its range at nine, despite nine being the smaller absolute figure.</p>
+
+        <p>The measure must therefore reference a baseline derived from the agent's own observed history rather than a population threshold. This is the point at which monitoring output ceases to function as a log and begins to function as a reference distribution, and it is the main reason the monitoring layer is load-bearing rather than incidental.</p>
+
+        <p>Characterizing that baseline is a more demanding exercise than it first appears, and it is a different question from the one performance metrics answer. The relevant questions are distributional. What does this system's output look like across representative inputs? How much variation is normal in response to materially similar requests? Under which operating conditions does behavior approach the edges of its range, and which contexts push it outside? A system whose ordinary behavior is characterized to this level can be monitored meaningfully. A system understood only through aggregate performance figures cannot, because there is no structure against which to read the monitoring output.</p>
+
+        <p>The parallel to human judgment is close. Sensitivity to a colleague's behavior changing is high precisely because their range is well established, and the detection often precedes articulation: something registers as off before the observer can say what shifted. That sensitivity is a function of how richly the baseline was learned, not of how closely the person is currently being watched.</p>
+
+        <p>Treating the baseline as a governed artifact rather than a byproduct of telemetry has consequences that reach into existing standards. The controls below are the ones a behavioral baseline implies, set against the clauses in the major frameworks that each one already partially anticipates. The mapping is ours; the clauses are not, and several of them turn out to assume a baseline they never require anyone to establish.</p>
+
+        <div class="art-table">
+          <p class="cap">Table 1 &middot; Controls implied by a behavioral baseline</p>
+          <div class="scroll">
+            <table>
+              <thead>
+                <tr><th scope="col">Requirement</th><th scope="col">Control</th><th scope="col">Framework alignment</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Behavioral profile documentation</td>
+                  <td>Maintain a documented behavioral profile per production system: characteristic output patterns across use case classes, known edge case behaviors, performance bands, and qualitative descriptors that metrics do not capture.</td>
+                  <td>ISO 42001 §8.4, §9.1<br>NIST MAP 1.6, MEASURE 2.2<br>EU AI Act Art. 11, Art. 13</td>
+                </tr>
+                <tr>
+                  <td>Drift threshold definition</td>
+                  <td>Define the boundaries of the expected range before deployment, in both quantitative bounds and qualitative criteria. Setting the threshold is a governance decision rather than a technical one.</td>
+                  <td>ISO 42001 §9.1<br>NIST MEASURE 2.5<br>EU AI Act Art. 9.7</td>
+                </tr>
+                <tr>
+                  <td>Continuous behavioral monitoring</td>
+                  <td>Compare ongoing behavior against the profile, covering output distribution, edge case handling and qualitative consistency, rather than performance metrics alone.</td>
+                  <td>ISO 42001 §9.1, §10.1<br>NIST MANAGE 2.4<br>EU AI Act Art. 9, Art. 62</td>
+                </tr>
+                <tr>
+                  <td>Post-drift inquiry protocol</td>
+                  <td>A documented process for drift events that distinguishes scope failure from model failure, since the two carry different implications for whether the relationship continues.</td>
+                  <td>ISO 42001 §10.1<br>NIST MANAGE 3.1<br>EU AI Act Art. 62</td>
+                </tr>
+                <tr>
+                  <td>Repair signal standard</td>
+                  <td>A defined repair signal for drift events exceeding threshold, issued to the parties whose reliance was affected rather than only to the governance function.</td>
+                  <td>ISO 42001 §10.1, §10.2<br>NIST MANAGE 4.1<br>EU AI Act Art. 62, Art. 73</td>
+                </tr>
+                <tr>
+                  <td>Baseline versioning</td>
+                  <td>A formal process for re-establishing the expected range when the system is updated, treating a model version change as an event that invalidates the prior baseline.</td>
+                  <td>ISO 42001 §8.4, §10.2<br>NIST MANAGE 2.4<br>EU AI Act Art. 9, Art. 17</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <p>Two of these deserve comment because they are routinely skipped in practice.</p>
+
+        <p>Threshold definition is consistently delegated to whoever implements the monitoring, on the reasoning that the threshold is a tuning parameter. It is not. The threshold encodes how much deviation the organization is willing to absorb before intervening, which is a statement about risk appetite and therefore a governance decision with an owner. Delegating it to implementation means the risk appetite is set implicitly, by whoever had to pick a number to make an alert fire.</p>
+
+        <p>Baseline versioning is skipped more often still, and it is the one with the sharpest failure mode. A model update invalidates the behavioral characterization that preceded it. The post-update system may be better in every respect and will still produce deviation against a baseline learned from its predecessor. Organizations that update models without re-establishing the range experience a burst of alerts that correlate with the deployment rather than with any risk, conclude the monitoring is noisy, and begin discounting it. The monitoring was correct. The reference had expired.</p>
+
+        <h3><span class="num">4.3</span> Asymmetric adjustment</h3>
+
+        <p>The measure must be capable of rising and falling at different rates, and specifically of falling faster than it rises.</p>
+
+        <p>There is a defensible reason for this beyond intuition. A long record of compliant behavior is weak evidence about the next action, since compliance is consistent with both a well-behaved agent and a compromised one that has not yet acted. A single serious violation is strong evidence, because it is inconsistent with the well-behaved case. The appropriate update on observing the violation is therefore larger than the update on observing one more compliant action, and a measure that adjusts symmetrically will misstate the evidence in both directions.</p>
+
+        <p>The practical consequence of getting this wrong is that teams revert to binary controls. A measure that recovers too readily provides no durable signal after an incident. A measure that cannot recover at all is functionally a revocation with extra steps.</p>
+
+        <h3><span class="num">4.4</span> Attenuation across indirect relationships</h3>
+
+        <p>Agents extend confidence to one another implicitly whenever work is delegated. A service that trusts an orchestrator inherits some basis for confidence in whatever that orchestrator calls on its behalf. This inherited confidence is real, and it is weaker than confidence established directly, and it weakens further with each additional intermediary.</p>
+
+        <p>A measure without attenuation propagates an initial grant across the connected estate without diminishment, which reproduces the behavior of a flat allow list under a different name. The rate of attenuation and the point at which inherited confidence should be treated as absent are implementation questions, and reasonable implementations will differ.</p>
+
+        <p>Human institutions have handled indirect trust for a long time, and the machinery they use is more structured than it first appears. A reference is given by a named party who stakes something on it. Its weight depends on what that party knows, how recently they knew it, and what they are exposed to if they are wrong. Multiple independent references converge on confidence faster than repeated references from one source, because the latter carries no new information. All of this transfers.</p>
+
+        <div class="art-table">
+          <p class="cap">Table 2 &middot; Controls implied by indirect trust</p>
+          <div class="scroll">
+            <table>
+              <thead>
+                <tr><th scope="col">Requirement</th><th scope="col">Control</th><th scope="col">Framework alignment</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Principal accountability mapping</td>
+                  <td>Identify the human actors across development and deployment, including data curation, training and operation, and document the accountability scope of each.</td>
+                  <td>ISO 42001 §6.1, §8.4<br>NIST GOVERN 1.2<br>EU AI Act Art. 9, Art. 28</td>
+                </tr>
+                <tr>
+                  <td>Voucher competence</td>
+                  <td>Establish evaluation relationships before deployment. Each voucher must hold domain-relevant expertise and a documented evaluation scope, since a reference outside its competence carries no weight.</td>
+                  <td>ISO 42001 §9.2<br>NIST GOVERN 5.2<br>EU AI Act Art. 43</td>
+                </tr>
+                <tr>
+                  <td>Endorsement accountability</td>
+                  <td>Endorsing parties accept accountability for the evaluation rather than limiting liability for it, and the endorsement is revisited on material model change.</td>
+                  <td>ISO 42001 §9.2, Clause 7.5<br>NIST GOVERN 6.1<br>EU AI Act Art. 40</td>
+                </tr>
+                <tr>
+                  <td>Convergent vouching</td>
+                  <td>High-consequence deployments require independent endorsements with non-overlapping evaluation scope. A single chain is insufficient regardless of the strength of its single link.</td>
+                  <td>ISO 42001 §8.4<br>NIST MAP 1.1<br>EU AI Act Art. 9, Art. 43</td>
+                </tr>
+                <tr>
+                  <td>Chain of trust documentation</td>
+                  <td>A documented chain for every production system, from training data provenance through deployment context, with a named accountable party at each link.</td>
+                  <td>ISO 42001 Annex A<br>NIST MAP 1.5<br>EU AI Act Art. 11, Art. 25</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <p>The convergent vouching requirement is the one most often resisted, usually on cost grounds, and it is the one with the clearest justification. Independent endorsements with non-overlapping scope reduce correlated error. Three references that all derive from the same evaluation, or from evaluators who share an assumption, provide roughly the confidence of one. This is why a vendor's own assurances, however thorough, cannot substitute for an assessment with different exposure, and why a measure should weight convergent independent evidence differently from repeated evidence of the same kind.</p>
+
+        <p>Note also what the first row implies for the measure. If accountability maps to named parties, then attenuation is not purely a function of topological distance. A two-hop path through a party with deep domain competence and real exposure may warrant more inherited confidence than a one-hop path through a party with neither. Hop count is a useful approximation and a poor substitute for the strength of the links.</p>
+
+        <h3><span class="num">4.5</span> Representation of absent evidence</h3>
+
+        <p>The measure must distinguish a party about which nothing has been observed from a party that has been observed behaving badly. Binary controls collapse both into a single denied state, and the two conditions warrant different handling. Absent evidence calls for a constrained initial envelope and deliberate evidence gathering. Adverse evidence calls for containment.</p>
+
+        <p>In our experience this requirement is the one most often omitted, and its omission is costly in both directions: every newly introduced system is treated as hostile, or, more commonly, absence of adverse evidence is silently read as a positive finding.</p>
+
+        <h2><span class="num">5.</span> Decisions the measure makes available</h2>
+
+        <p>A measure satisfying the above supports enforcement decisions that a binary control cannot express. Four are worth noting.</p>
+
+        <ul>
+          <li><strong>Action-scoped rather than agent-scoped authorization.</strong> The question becomes whether this pair, for this operation, at this distance from the established baseline, clears a threshold calibrated to the consequence of the operation.</li>
+          <li><strong>Isolation without suspension.</strong> A violation can constrain a specific relationship while the agent continues operating in contexts where its record remains intact.</li>
+          <li><strong>Defined handling for unknown parties.</strong> Newly introduced systems receive a constrained envelope and an evidence-gathering period rather than a binary admit or deny.</li>
+          <li><strong>Repair as a process.</strong> A measure that falls gradually can be rebuilt gradually, through demonstrated behavior over time, rather than restored by an administrative action.</li>
+        </ul>
+
+        <h2><span class="num">6.</span> Deviation is not uniformly adverse</h2>
+
+        <p>One consequence of an agent-relative baseline deserves separate treatment, because it determines whether the measure is usable in production or merely defensible in principle.</p>
+
+        <p>Deviation from an established range is not automatically a negative finding. In human relationships this is understood without being taught. Some drift indicates growth: a colleague handling situations with more sophistication than they did a year ago departs from their established pattern, and the departure is favorable. Some drift indicates environmental change: the same person behaving differently because the conditions around them have changed, with no alteration in their reliability. Some drift indicates an actual problem, a change in disposition or capability that bears on whether they should still be relied upon.</p>
+
+        <p>The ordinary human response to noticing drift is not alarm. It is curiosity. Context is sought, questions are asked, the behavioral model is updated, and the expected range is revised to accommodate growth or changed circumstances. Only drift that resists benign explanation escalates into a trust concern.</p>
+
+        <p>Governance frameworks presently lack this distinction and tend to treat significant deviation from baseline as an event requiring remediation. The result is two failure modes that look opposite and share a cause. Genuine drift is missed, because the baseline was characterized too loosely for the signal to separate from noise. Benign drift is over-escalated, because no mechanism exists to distinguish growth from failure. Both follow from treating deviation as a scalar quantity rather than as something requiring interpretation.</p>
+
+        <p>For the measure, the requirement that follows is modest to state and difficult to satisfy: it must be capable of absorbing a legitimate shift in an agent's range without recording that shift as a loss of trust. We regard the reliable separation of benign from adverse drift as the hardest open problem in this area, and we treat claims to have solved it with suspicion, including our own.</p>
+
+        <h2><span class="num">7.</span> A note on explainability</h2>
+
+        <p>Framing trust as relational carries an implication for explainability that is worth drawing out, because it diverges from where most current effort is directed.</p>
+
+        <p>The dominant explainability program aims at technical transparency: post-hoc explanations, attention maps, feature attribution, artifacts that expose why a model produced a particular output. This is valuable research. It is not, however, what an enforcement decision requires.</p>
+
+        <p>What governance needs is closer to what a working relationship needs, which is behavioral legibility rather than access to internals. A colleague accounts for a decision by articulating reasoning in terms commensurable with a shared understanding of the work, not by providing access to their neural activity. The account is adequate when it makes the behavior interpretable in context: whether the action fell inside the expected range, why it departed if it did, and what the departure implies for future expectations.</p>
+
+        <p>An explanation that satisfies those three conditions supports a trust decision even when the internal computation remains opaque. An explanation that exposes internal computation without situating the behavior against an expected range does not, which is why interpretability advances have not translated into governance confidence as directly as was anticipated.</p>
+
+        <h2><span class="num">8.</span> Limitations and open problems</h2>
+
+        <p>Four limitations are worth stating plainly, since each is a real cost of the approach.</p>
+
+        <p><strong>Cold start.</strong> A baseline requires observation, and an agent must be permitted to act before there is anything to observe. The initial envelope is therefore a judgment informed by whatever indirect evidence exists, and it will sometimes be set too tightly, producing friction, or too loosely, producing exposure. We do not regard this as solved.</p>
+
+        <p><strong>Adversarial accumulation.</strong> A measure that can be raised through behavior can be raised deliberately. An agent, or an actor controlling one, that operates patiently within its envelope while accumulating standing, and then exercises that standing once, is a coherent attack against this class of system. Mitigations exist, but any implementation that does not treat this as a design assumption is unserious.</p>
+
+        <p><strong>Baseline validity under change.</strong> Discussed in section 6. Worth restating as a limitation rather than only as a design requirement: until benign and adverse drift can be separated reliably, any deployment of this approach carries a false-positive burden that has to be absorbed by human review.</p>
+
+        <p><strong>Measurement cost.</strong> Maintaining pairwise state across an estate is more expensive than maintaining a scalar per agent, in storage, in computation and in explicability. Whether the additional expressiveness justifies that cost depends on the sensitivity of the deployment, and for low-consequence estates it may not.</p>
+
+        <h2><span class="num">9.</span> Summary</h2>
+
+        <p>Observation establishes what occurred. Enforcement requires an expectation about what will occur next, held by a specific party about a specific counterparty, informed by that counterparty's own history and by the strength of any indirect evidence standing in for direct experience.</p>
+
+        <p>That expectation is representable, and the requirements it must satisfy are enumerable. It is not a scalar, it is not an attribute of an agent, and it cannot be obtained by collecting more of the same signal. It is a measure over relationships, derived from observation but not reducible to it.</p>
+
+        <div class="art-foot">
+          <p>Veraidyn is building a runtime trust layer on these principles. This note describes the measurement requirements only; implementation details are deliberately out of scope. Correspondence welcome at <a href="mailto:contact@veraidyn.com?subject=Measuring%20trust%20in%20agentic%20systems">contact@veraidyn.com</a>.</p>
+        </div>
+
+      </div></div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <p>Veraidyn · Trust for AI agents</p>
+      <p>© 2026 Veraidyn. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

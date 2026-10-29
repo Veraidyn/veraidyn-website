@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resources · Veraidyn</title>
+  <meta name="description" content="Why agentic AI incidents keep happening, and why the controls already in place cannot stop them.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://veraidyn.com/resources/">
+  <meta property="og:title" content="Resources · Veraidyn">
+  <meta property="og:description" content="Why agentic AI incidents keep happening, and why the controls already in place cannot stop them.">
+  <meta property="og:image" content="https://veraidyn.com/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Resources · Veraidyn">
+  <meta name="twitter:description" content="Why agentic AI incidents keep happening, and why the controls already in place cannot stop them.">
+  <meta name="twitter:image" content="https://veraidyn.com/og.png">
+
+  <link rel="icon" href="/favicon.png" type="image/png" sizes="48x48">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <nav class="nav" aria-label="Main">
+    <div class="wrap nav-inner">
+      <a class="brand" href="/" aria-label="Veraidyn home">
+        <span class="logo-tile">
+          <img class="logo-img" src="/logo-nav.png" alt="Veraidyn"
+               onerror="this.style.display='none'; document.getElementById('wm-fallback').style.display='flex';">
+          <span class="wm-fallback" id="wm-fallback" aria-hidden="true">
+            <span class="seg-teal">VER</span><span class="div"></span><span class="seg-ai">AI</span><span class="div"></span><span class="seg-teal">DYN</span>
+          </span>
+        </span>
+      </a>
+      <div class="nav-links">
+        <a href="/#why-trust">Why trust</a>
+        <a href="/#approach">The approach</a>
+        <a href="/resources/" aria-current="page">Resources</a>
+        <a href="/company/">Company</a>
+      </div>
+      <a class="btn" href="mailto:contact@veraidyn.com?subject=Veraidyn%20early%20access">Early access</a>
+    </div>
+  </nav>
+
+  <main id="main">
+    <header class="phead">
+      <div class="wrap">
+        <p class="kicker">Resources</p>
+        <h1>Why agents escape, and why your controls let them.</h1>
+        <p class="lede">Analysis of how agentic AI incidents actually happen, what the existing stack could not see, and how trust is measured instead. Written to be useful whether or not you ever talk to us.</p>
+      </div>
+    </header>
+
+    <section>
+      <div class="wrap">
+
+        <!-- =================================================================
+             Order is editorial, not chronological: the headliner holds the
+             top slot until something displaces it. Items marked .eplanned
+             are not yet written and carry no link.
+
+             THUMBNAILS. All three are in place, each at
+               /assets/thumbs/<article-slug>.jpg
+             matching the article's own URL slug, so the filename is never a
+             guess. Supply 1280x720 (16:9, the YouTube thumbnail size); it is
+             displayed at roughly 208x117, so keep any type in the artwork
+             large or leave it out.
+
+             The <span class="ph"> placeholder stays even now that the real
+             images exist. It is painted underneath the image rather than in
+             place of it, so it costs no layout and never shows while the
+             file loads, but it catches a 404 if an asset is ever renamed or
+             dropped. Removing it would buy nothing and lose that.
+
+             The same three assets are now also each article's og:image and
+             twitter:image, which is what LinkedIn renders when the link is
+             shared. og:image:width and :height are declared alongside them:
+             without those, a scraper that has not yet fetched the file
+             sometimes renders the card with no image at all on the first
+             share. This index page still shares as /og.png, correctly,
+             since it has no artwork of its own.
+             ================================================================= -->
+        <div class="elist">
+
+          <article class="eitem">
+            <div class="emeta">
+              <a class="ethumb" href="/resources/trust-lives-between-two-systems/" aria-hidden="true" tabindex="-1">
+                <img src="/assets/thumbs/trust-lives-between-two-systems.jpg" alt=""
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="ph"><span>Placeholder</span></span>
+              </a>
+              <span class="etype">Technical note</span>
+              <span class="edate">Draft</span>
+            </div>
+            <div>
+              <h3><a href="/resources/trust-lives-between-two-systems/">Measuring trust in agentic systems</a></h3>
+              <p class="esum">Behavior monitoring establishes what an agent did. It does not establish what an agent should be permitted to do next. Requirements for a runtime trust measure, the controls a behavioral baseline implies, and the problems that remain open.</p>
+              <p class="ego">Read the note &rarr;</p>
+            </div>
+          </article>
+
+          <article class="eitem">
+            <div class="emeta">
+              <a class="ethumb" href="/resources/seven-domains-of-agentic-assessment/" aria-hidden="true" tabindex="-1">
+                <img src="/assets/thumbs/seven-domains-of-agentic-assessment.jpg" alt=""
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="ph"><span>Placeholder</span></span>
+              </a>
+              <span class="etype">Technical note</span>
+              <span class="edate">Draft</span>
+            </div>
+            <div>
+              <h3><a href="/resources/seven-domains-of-agentic-assessment/">The seven domains of agentic assessment</a></h3>
+              <p class="esum">What a behavioral assessment examines, domain by domain, and why the divisions fall where they do. Includes the failures that belong to no single domain, and why an average over seven scores discards the information the structure exists to create.</p>
+              <p class="ego">Read the note &rarr;</p>
+            </div>
+          </article>
+
+          <article class="eitem">
+            <div class="emeta">
+              <a class="ethumb" href="/resources/trust-is-repaired-not-revoked/" aria-hidden="true" tabindex="-1">
+                <img src="/assets/thumbs/trust-is-repaired-not-revoked.jpg" alt=""
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="ph"><span>Placeholder</span></span>
+              </a>
+              <span class="etype">Analysis</span>
+              <span class="edate">Draft</span>
+            </div>
+            <div>
+              <h3><a href="/resources/trust-is-repaired-not-revoked/">Trust is repaired, not revoked</a></h3>
+              <p class="esum">Containment is the correct first response to a trust failure, and it is routinely treated as the last one. Why unconditional trust and zero standing trust both carry performance and security costs, and what a credible route back requires.</p>
+              <p class="ego">Read the analysis &rarr;</p>
+            </div>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===================== SPEAKING =====================
+         Moved here from the Company page: it is content, not company
+         information, and one copy means one place to update when a date
+         moves. The homepage credential strip links to this anchor, so the
+         id and the scroll-margin both have to stay.
+
+         Dates verified against the calendar: 7 Nov 2026 is a Saturday and
+         9 Nov 2026 is a Monday. Both fall after US daylight time ends on
+         1 Nov, so the datetime attributes carry -05:00 (EST), not -04:00.
+
+         STILL TO ADD: the session page URL for each talk, and the abstract
+         exactly as submitted. The abstract below is a draft written from
+         the published notes, not the text either conference is holding.
+         If the submitted description differs, the submitted one wins.
+
+         Both entries share a title and abstract because it is one talk
+         given twice. That is correct, not a copy-paste error.
+         ================================================== -->
+    <section id="speaking" style="background: var(--tint); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); scroll-margin-top: 5rem;">
+      <div class="wrap">
+        <p class="sect-k">Speaking</p>
+        <h2 style="margin-top: 0.7rem; margin-bottom: 0.8rem;">Where to find us.</h2>
+        <p class="prose" style="margin-bottom: 1.8rem;">We talk about applying human trust dynamics to agentic AI. Come argue with us.</p>
+
+        <div style="border-top: 1px solid var(--line);">
+          <article class="talk">
+            <div class="when">
+              <span class="venue">BSides Charleston</span>
+              <span class="date"><time datetime="2026-11-07T14:25:00-05:00">Sat, Nov 7 &middot; 2:25pm ET</time></span>
+            </div>
+            <div>
+              <h3>Human trust dynamics for agentic AI</h3>
+              <p class="blurb">Pre-AI controls express permission as a binary: an action is allowed or it is not. That cannot represent a degree of trust, which is what governing an autonomous agent actually requires. How transitive trust, behavioral expectation and relational repair translate into runtime controls, and what each makes visible that behavior monitoring alone does not.</p>
+            </div>
+          </article>
+
+          <article class="talk">
+            <div class="when">
+              <span class="venue">Simply Cybercon</span>
+              <span class="date"><time datetime="2026-11-09T14:00:00-05:00">Mon, Nov 9 &middot; 2:00pm ET</time></span>
+            </div>
+            <div>
+              <h3>Human trust dynamics for agentic AI</h3>
+              <p class="blurb">Pre-AI controls express permission as a binary: an action is allowed or it is not. That cannot represent a degree of trust, which is what governing an autonomous agent actually requires. How transitive trust, behavioral expectation and relational repair translate into runtime controls, and what each makes visible that behavior monitoring alone does not.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== MATERIALS =====================
+         THIS REPOSITORY IS PUBLIC. Any file committed here is readable in
+         the GitHub repo tree whether or not a page links to it, so an
+         obscure filename protects nothing. Treat every path under /assets/
+         as published to the world.
+
+         That rules out hosting the pitch deck here. It is offered on
+         request through mailto instead, which keeps it out of the repo,
+         keeps control of who receives it, and captures the lead. If a
+         self-serve link is wanted later, host it somewhere with view
+         tracking and swap the mailto for that URL; do not commit the deck.
+
+         The capabilities sheet IS intended to be public. When it is ready,
+         render it to /assets/papers/ like the whitepapers, then replace
+         the "In preparation" row with a real .art-dl download link.
+         ================================================== -->
+    <section>
+      <div class="wrap">
+        <p class="sect-k">Materials</p>
+        <h2 style="margin-top: 0.7rem; margin-bottom: 0.8rem;">Company materials.</h2>
+        <p class="prose" style="margin-bottom: 1.8rem;">For evaluators, partners and investors who want the short version.</p>
+
+        <div style="border-top: 1px solid var(--line);">
+          <article class="talk eplanned">
+            <div class="when">
+              <span class="venue">Capabilities sheet</span>
+              <span class="date">In preparation</span>
+            </div>
+            <div>
+              <h3>What Veraidyn does, on one page</h3>
+              <p class="blurb">The product, the problem it addresses and where it sits in an existing stack, condensed for someone deciding whether to take a meeting.</p>
+            </div>
+          </article>
+
+          <article class="talk">
+            <div class="when">
+              <span class="venue">Pitch deck</span>
+              <span class="date">On request</span>
+            </div>
+            <div>
+              <h3>Investor and partner deck</h3>
+              <p class="blurb">Market, approach, traction and roadmap. Sent directly rather than posted, so write to us and we will get it over to you.</p>
+              <p class="ego"><a href="mailto:contact@veraidyn.com?subject=Veraidyn%20pitch%20deck%20request">Request the deck &rarr;</a></p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <p>Veraidyn · Trust for AI agents</p>
+      <p>© 2026 Veraidyn. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>
