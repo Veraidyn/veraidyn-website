@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://veraidyn.com/sitemap.xml
